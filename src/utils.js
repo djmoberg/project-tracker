@@ -114,3 +114,15 @@ export function minuteOptions() {
         {text: "45", value: "45"}
     ]
 }
+
+export function validDate(date) {
+    return (date.length !== 0)
+}
+
+export function validFromTo(from, to) {
+    return (calculateHours(from, to) > 0)
+}
+
+export function validComment(comment) {
+    return (comment.length !== 0)
+}

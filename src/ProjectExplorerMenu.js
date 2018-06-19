@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Menu } from 'semantic-ui-react'
+import { Menu, Dropdown } from 'semantic-ui-react'
 
 export default class ProjectExplorerMenu extends Component {
     render() {
@@ -19,10 +19,15 @@ export default class ProjectExplorerMenu extends Component {
                         onClick={() => this.props.onMenuClick("overview")}
                     />
                     <Menu.Menu position='right'>
-                        <Menu.Item
+                        <Dropdown item text='Valg'>
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => this.props.onChangeProjectClick()} >Endre Prosjekt</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                        {/* <Menu.Item
                             name="Endre Prosjekt"
                             onClick={() => this.props.onChangeProjectClick()}
-                        />
+                        /> */}
                         <Menu.Item
                             name="Logg ut"
                             onClick={() => this.props.logOut()}

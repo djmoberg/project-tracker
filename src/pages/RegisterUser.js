@@ -21,7 +21,8 @@ export default class RegisterUser extends Component {
             usernameIsValid: false,
             passwordIsValid: false,
             emailIsValid: true, //endre
-            loading: false
+            loading: false,
+            usernameInputIcon: " "
         }
     }
 
@@ -43,12 +44,12 @@ export default class RegisterUser extends Component {
             request.get(process.env.REACT_APP_BACKEND + "user/exists/" + username)
                 .then((res) => {
                     if (res.text === "false")
-                        this.setState({ usernameIsValid: true, loading: false })
+                        this.setState({ usernameIsValid: true, loading: false, usernameInputIcon: "check green" })
                     else
-                        this.setState({ usernameIsValid: false, loading: false })
+                        this.setState({ usernameIsValid: false, loading: false, usernameInputIcon: "warning sign red" })
                 })
         } else {
-            this.setState({ usernameIsValid: false })
+            this.setState({ usernameIsValid: false, usernameInputIcon: " " })
         }
     }
 
@@ -80,16 +81,20 @@ export default class RegisterUser extends Component {
                 <Form error={this.state.error} >
                     <Form.Input
                         required
+                        error={this.state.usernameInputIcon === "warning sign red"}
+                        icon={this.state.usernameInputIcon}
                         loading={this.state.loading}
                         type="text"
                         label="Brukernavn"
                         placeholder="Brukernavn"
                         value={this.state.username}
-                        onChange={(_, { value }) => this.setState({ username: value })}
+                        onChange={(_, { value }) => this.setState({ username: value }, () => {
+                            this.isUsernameValid(this.state.username)
+                        })}
                         onFocus={() => this.setState({ error: false })}
-                        onBlur={() => this.isUsernameValid(this.state.username)}
+                        // onBlur={() => this.isUsernameValid(this.state.username)}
                     />
-                    {/* <Message positive size='mini' >OK</Message> */}
+                    {/* <Label color="red" basic pointing>Please enter a value</Label> */}
                     <Form.Input
                         required
                         type="password"
