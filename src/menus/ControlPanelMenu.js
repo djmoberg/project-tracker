@@ -7,7 +7,7 @@ export default class ControlPanelMenu extends Component {
 
         return (
             <div>
-                <Menu pointing secondary>
+                <Menu pointing secondary stackable>
                     <Menu.Item
                         name='Velg Prosjekt'
                         active={activeTab === "chooseProject"}

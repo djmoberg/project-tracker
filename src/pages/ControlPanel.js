@@ -18,6 +18,12 @@ export default class RegisterUser extends Component {
         }
     }
 
+    componentDidMount() {
+        const selectedProject = localStorage.getItem('selectedProject')
+        if (selectedProject)
+            this.handleProjectSelected(selectedProject)
+    }
+
     handleMenuClick = (value) => {
         this.setState({ currentView: value })
     }
@@ -27,6 +33,7 @@ export default class RegisterUser extends Component {
     }
 
     handleChangeProjectClick = () => {
+        localStorage.removeItem("selectedProject")
         this.setState({ currentView: "chooseProject", selectedProject: 0 })
     }
 

@@ -4,7 +4,7 @@ import Login from './pages/Login'
 import RegisterUser from './pages/RegisterUser'
 import ControlPanel from './pages/ControlPanel'
 
-import { Header, Segment } from 'semantic-ui-react'
+import { Header, Segment, Loader, Dimmer } from 'semantic-ui-react'
 
 const request = require('superagent');
 
@@ -14,7 +14,8 @@ class App extends Component {
 
 		this.state = {
 			isLoggedIn: false,
-			showRegister: false
+			showRegister: false,
+			renderPage: false
 		}
 	}
 
@@ -29,9 +30,9 @@ class App extends Component {
 			.then((res) => {
 				console.log(res)
 				if (res.body.loggedIn)
-					this.setState({ isLoggedIn: true, username: res.body.username })
+					this.setState({ isLoggedIn: true, username: res.body.username, renderPage: true })
 				else
-					this.setState({ isLoggedIn: false })
+					this.setState({ isLoggedIn: false, renderPage: true })
 			})
 	}
 
@@ -58,16 +59,30 @@ class App extends Component {
 	}
 
 	render() {
-		return (
-			<div>
-				<Segment basic inverted textAlign="center" >
-					<Header as="h1">Project Tracker</Header>
-				</Segment>
-				<div className="App" >
-					{this.router()}
+		if (this.state.renderPage)
+			return (
+				<div>
+					<Segment basic inverted textAlign="center" >
+						<Header as="h1">Project Tracker</Header>
+					</Segment>
+					<div className="App" >
+						{this.router()}
+					</div>
 				</div>
-			</div>
-		);
+			)
+		else
+			return (
+				<div>
+					<Segment basic inverted textAlign="center" >
+						<Header as="h1">Project Tracker</Header>
+					</Segment>
+					<Segment style={{ marginTop: "50px" }} basic>
+						<Dimmer active inverted>
+							<Loader />
+						</Dimmer>
+					</Segment>
+				</div>
+			)
 	}
 }
 

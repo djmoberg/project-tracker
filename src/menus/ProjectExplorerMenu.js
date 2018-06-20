@@ -7,7 +7,7 @@ export default class ProjectExplorerMenu extends Component {
 
         return (
             <div>
-                <Menu pointing secondary>
+                <Menu pointing secondary stackable>
                     <Menu.Item
                         name='Bruker'
                         active={activeTab === "user"}
@@ -17,6 +17,11 @@ export default class ProjectExplorerMenu extends Component {
                         name='Oversikt'
                         active={activeTab === "overview"}
                         onClick={() => this.props.onMenuClick("overview")}
+                    />
+                    <Menu.Item
+                        name='Admin'
+                        active={activeTab === "admin"}
+                        onClick={() => this.props.onMenuClick("admin")}
                     />
                     <Menu.Menu position='right'>
                         <Dropdown item text='Valg'>

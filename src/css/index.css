@@ -8,3 +8,7 @@ body {
   max-width: 1000px;
   margin: 50px auto;
 }
+
+.loader {
+  margin: 50px auto;
+}

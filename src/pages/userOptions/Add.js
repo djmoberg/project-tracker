@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { hourOptions, minuteOptions, validDate, validFromTo, validComment, getHoursMinutes } from '../../utils'
 
-import { Form, Dropdown, TextArea, Segment, Header, Label } from 'semantic-ui-react'
+import { Form, Dropdown, TextArea, Segment, Header, Label, Message } from 'semantic-ui-react'
 
 const request = require('superagent');
 
@@ -24,7 +24,8 @@ export default class Add extends Component {
             selectedFromHour: new Date().getHours().toString(),
             selectedFromMinute: "00",
             selectedToHour: new Date().getHours().toString(),
-            selectedToMinute: "15"
+            selectedToMinute: "15",
+            workAdded: false
         }
     }
 
@@ -68,7 +69,7 @@ export default class Add extends Component {
             .then((res) => {
                 if (res.body.status === "Work added") {
                     this.props.updateOverview(res.body.overview)
-                    
+
                     this.setState({
                         workDate: "",
                         comment: "",
@@ -78,7 +79,8 @@ export default class Add extends Component {
                         selectedFromHour: new Date().getHours().toString(),
                         selectedFromMinute: "00",
                         selectedToHour: new Date().getHours().toString(),
-                        selectedToMinute: "15"
+                        selectedToMinute: "15",
+                        workAdded: true
                     }, () => {
                         this.setState({
                             workFrom: this.state.selectedFromHour + ":" + this.state.selectedFromMinute,
@@ -123,7 +125,7 @@ export default class Add extends Component {
                     <p>workTo: {this.state.workTo}</p>
                     <p>comment: {this.state.comment}</p>
                 </Segment> */}
-                <Form style={{ maxWidth: "400px" }} >
+                <Form style={{ maxWidth: "400px" }} success={this.state.workAdded} >
                     <Form.Input
                         error={this.state.workDateError}
                         type="Date"
@@ -132,6 +134,9 @@ export default class Add extends Component {
                         onChange={(_, { value }) => this.setState({ workDate: value }, () => {
                             this.setState({ isValidWorkDate: validDate(this.state.workDate), workDateError: !validDate(this.state.workDate) })
                         })}
+                        onFocus={() => {
+                            this.setState({ workAdded: false })
+                        }}
                     />
                     <Form.Group widths='equal'>
                         <Form.Field error={this.state.workFromToError} >
@@ -145,6 +150,9 @@ export default class Add extends Component {
                                         this.validateWorkFromTo()
                                     })
                                 })}
+                                onFocus={() => {
+                                    this.setState({ workAdded: false })
+                                }}
                                 options={hourOptions()}
                                 scrolling
                             />
@@ -158,6 +166,9 @@ export default class Add extends Component {
                                         this.validateWorkFromTo()
                                     })
                                 })}
+                                onFocus={() => {
+                                    this.setState({ workAdded: false })
+                                }}
                                 options={minuteOptions()}
                             />
                         </Form.Field>
@@ -172,6 +183,9 @@ export default class Add extends Component {
                                         this.validateWorkFromTo()
                                     })
                                 })}
+                                onFocus={() => {
+                                    this.setState({ workAdded: false })
+                                }}
                                 options={hourOptions()}
                                 scrolling
                             />
@@ -185,6 +199,9 @@ export default class Add extends Component {
                                         this.validateWorkFromTo()
                                     })
                                 })}
+                                onFocus={() => {
+                                    this.setState({ workAdded: false })
+                                }}
                                 options={minuteOptions()}
                             />
                             {this.state.workFromToError &&
@@ -201,8 +218,16 @@ export default class Add extends Component {
                             onChange={(_, { value }) => this.setState({ comment: value }, () => {
                                 this.setState({ isValidComment: validComment(this.state.comment), commentError: !validComment(this.state.comment) })
                             })}
+                            onFocus={() => {
+                                this.setState({ workAdded: false })
+                            }}
                         />
                     </Form.Field>
+                    <Message
+                        success
+                        header='Arbeid lagt til!'
+                        content='Arbeidet er blitt lagt til prosjektet'
+                    />
                     {this.props.mode === "add" &&
                         <Form.Button
                             disabled={!this.allIsValid()}

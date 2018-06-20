@@ -37,6 +37,7 @@ export default class ProjectExplorer extends Component {
             .withCredentials()
             .then((res) => {
                 this.setState({ project: res.body })
+                localStorage.setItem('selectedProject', this.props.selectedProject)
             })
     }
 
