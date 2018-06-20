@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import ProjectExplorerMenu from '../ProjectExplorerMenu'
+import ProjectExplorerMenu from '../menus/ProjectExplorerMenu'
 import User from './User'
 import Overview from './Overview'
 
@@ -40,6 +40,10 @@ export default class ProjectExplorer extends Component {
             })
     }
 
+    updateOverview = (overview) => {
+        this.setState({ project: { name: this.state.project.name, overview } })
+    }
+
     handleMenuClick = (name) => {
         localStorage.setItem('activeTab', name)
         this.setState({ activeTab: name })
@@ -48,7 +52,7 @@ export default class ProjectExplorer extends Component {
     renderPage(name) {
         switch (name) {
             case "user":
-                return <User username={this.props.username} />
+                return <User username={this.props.username} overview={this.state.project.overview} updateOverview={this.updateOverview} />
             case "overview":
                 return <Overview overview={this.state.project.overview} />
             default:

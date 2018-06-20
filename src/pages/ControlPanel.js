@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import ControlPanelMenu from '../ControlPanelMenu'
+import ControlPanelMenu from '../menus/ControlPanelMenu'
 import ChooseProject from './ChooseProject'
 import RegisterProject from './RegisterProject'
 import JoinProject from './JoinProject'

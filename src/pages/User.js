@@ -14,9 +14,9 @@ export default class User extends Component {
     }
 
     componentDidMount() {
-		const activeTab = localStorage.getItem('activeUserTab')
-		if (activeTab)
-        	this.setState({activeTab: activeTab})
+		// const activeTab = localStorage.getItem('activeUserTab')
+		// if (activeTab)
+        // 	this.setState({activeTab: activeTab})
     }
 
     handleMenuClick = (name) => {
@@ -42,11 +42,11 @@ export default class User extends Component {
                 </Menu>
 
                 {this.state.activeTab === "add" &&
-                    <Add />
+                    <Add mode="add" header="Legg til arbeid" updateOverview={this.props.updateOverview} />
                 }
 
                 {this.state.activeTab === "userOverview" &&
-                    <UserOverview />
+                    <UserOverview overview={this.props.overview} username={this.props.username} />
                 }
 
             </div>

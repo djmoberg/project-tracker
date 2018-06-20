@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { hourOptions, minuteOptions, validDate, validFromTo, validComment } from '../../utils'
+
+import { hourOptions, minuteOptions, validDate, validFromTo, validComment, getHoursMinutes } from '../../utils'
 
 import { Form, Dropdown, TextArea, Segment, Header, Label } from 'semantic-ui-react'
 
@@ -28,16 +29,36 @@ export default class Add extends Component {
     }
 
     componentDidMount() {
-        this.setState({
-            workFrom: this.state.selectedFromHour + ":" + this.state.selectedFromMinute,
-            workTo: this.state.selectedToHour + ":" + this.state.selectedToMinute
-        }, () => {
+        if (this.props.mode === "add") {
             this.setState({
-                isValidWorkDate: validDate(this.state.workDate),
-                isValidWorkFromTo: validFromTo(this.state.workFrom, this.state.workTo),
-                isValidComment: validComment(this.state.comment)
+                workFrom: this.state.selectedFromHour + ":" + this.state.selectedFromMinute,
+                workTo: this.state.selectedToHour + ":" + this.state.selectedToMinute
+            }, () => {
+                this.setState({
+                    isValidWorkDate: validDate(this.state.workDate),
+                    isValidWorkFromTo: validFromTo(this.state.workFrom, this.state.workTo),
+                    isValidComment: validComment(this.state.comment)
+                })
             })
-        })
+        } else {
+            let work = this.props.work
+            let fromHM = getHoursMinutes(work.workFrom)
+            let toHM = getHoursMinutes(work.workTo)
+
+            this.setState({
+                workDate: work.workDate,
+                workFrom: work.workFrom,
+                workTo: work.workTo,
+                comment: work.comment,
+                isValidWorkDate: true,
+                isValidWorkFromTo: true,
+                isValidComment: true,
+                selectedFromHour: fromHM.timeH,
+                selectedFromMinute: fromHM.timeM,
+                selectedToHour: toHM.timeH,
+                selectedToMinute: toHM.timeM
+            })
+        }
     }
 
     addWork() {
@@ -45,7 +66,9 @@ export default class Add extends Component {
             .send({ workDate: this.state.workDate, workFrom: this.state.workFrom, workTo: this.state.workTo, comment: this.state.comment })
             .withCredentials()
             .then((res) => {
-                if (res.text === "Work added") {
+                if (res.body.status === "Work added") {
+                    this.props.updateOverview(res.body.overview)
+                    
                     this.setState({
                         workDate: "",
                         comment: "",
@@ -92,7 +115,7 @@ export default class Add extends Component {
     render() {
         return (
             <Segment attached='bottom' >
-                <Header as="h4" >Legg til arbeid</Header>
+                <Header as="h4" >{this.props.header}</Header>
                 {/* <Segment>
                     <h4>Fjernes</h4>
                     <p>workDate: {this.state.workDate}</p>
@@ -180,12 +203,14 @@ export default class Add extends Component {
                             })}
                         />
                     </Form.Field>
-                    <Form.Button
-                        disabled={!this.allIsValid()}
-                        onClick={() => this.addWork()}
-                    >
-                        Legg til
-                    </Form.Button>
+                    {this.props.mode === "add" &&
+                        <Form.Button
+                            disabled={!this.allIsValid()}
+                            onClick={() => this.addWork()}
+                        >
+                            Legg til
+                        </Form.Button>
+                    }
                 </Form>
             </Segment>
         )
