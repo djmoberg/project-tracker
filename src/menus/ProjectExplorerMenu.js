@@ -18,11 +18,13 @@ export default class ProjectExplorerMenu extends Component {
                         active={activeTab === "overview"}
                         onClick={() => this.props.onMenuClick("overview")}
                     />
-                    <Menu.Item
-                        name='Admin'
-                        active={activeTab === "admin"}
-                        onClick={() => this.props.onMenuClick("admin")}
-                    />
+                    {this.props.isAdmin &&
+                        <Menu.Item
+                            name='Admin'
+                            active={activeTab === "admin"}
+                            onClick={() => this.props.onMenuClick("admin")}
+                        />
+                    }
                     <Menu.Menu position='right'>
                         <Dropdown item text='Valg'>
                             <Dropdown.Menu>

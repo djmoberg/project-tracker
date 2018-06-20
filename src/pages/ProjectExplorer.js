@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ProjectExplorerMenu from '../menus/ProjectExplorerMenu'
 import User from './User'
 import Overview from './Overview'
+import Admin from './Admin'
 
 import { Segment, Header } from 'semantic-ui-react'
 
@@ -17,7 +18,8 @@ export default class ProjectExplorer extends Component {
             project: {
                 name: "",
                 overview: []
-            }
+            },
+            isAdmin: false
         }
     }
 
@@ -29,6 +31,12 @@ export default class ProjectExplorer extends Component {
         // const activeTab = localStorage.getItem('activeTab')
         // if (activeTab)
         //     this.setState({ activeTab: activeTab })
+
+        let isAdmin = this.props.user.isAdmin.some(id => {
+            return parseInt(id, 10) === parseInt(this.props.selectedProject, 10)
+        })
+
+        this.setState({ isAdmin })
     }
 
     fetchProject(projectId) {
@@ -53,9 +61,11 @@ export default class ProjectExplorer extends Component {
     renderPage(name) {
         switch (name) {
             case "user":
-                return <User username={this.props.username} overview={this.state.project.overview} updateOverview={this.updateOverview} />
+                return <User user={this.props.user} overview={this.state.project.overview} updateOverview={this.updateOverview} />
             case "overview":
                 return <Overview overview={this.state.project.overview} />
+            case "admin":
+                return <Admin />
             default:
                 break;
         }
@@ -70,6 +80,7 @@ export default class ProjectExplorer extends Component {
                     activeTab={this.state.activeTab}
                     onMenuClick={this.handleMenuClick}
                     onChangeProjectClick={this.props.onChangeProjectClick}
+                    isAdmin={this.state.isAdmin}
                 />
                 <Segment>
                     {this.renderPage(this.state.activeTab)}

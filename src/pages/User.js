@@ -27,7 +27,7 @@ export default class User extends Component {
     render() {
         return (
             <div>
-                <Header as="h3" >Bruker: {this.props.username}</Header>
+                <Header as="h3" >Bruker: {this.props.user.username}</Header>
                 <Menu attached='top' >
                     <Menu.Item
                         name='Legg til'
@@ -46,7 +46,7 @@ export default class User extends Component {
                 }
 
                 {this.state.activeTab === "userOverview" &&
-                    <UserOverview overview={this.props.overview} username={this.props.username} />
+                    <UserOverview overview={this.props.overview} username={this.props.user.username} />
                 }
 
             </div>

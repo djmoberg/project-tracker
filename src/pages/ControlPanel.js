@@ -61,7 +61,7 @@ export default class RegisterUser extends Component {
                 <div>
                     <ProjectExplorer
                         logOut={this.props.logOut}
-                        username={this.props.username}
+                        user={this.props.user}
                         selectedProject={this.state.selectedProject}
                         onChangeProjectClick={this.handleChangeProjectClick}
                     />

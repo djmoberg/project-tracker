@@ -15,7 +15,8 @@ class App extends Component {
 		this.state = {
 			isLoggedIn: false,
 			showRegister: false,
-			renderPage: false
+			renderPage: false,
+			user: {}
 		}
 	}
 
@@ -30,7 +31,7 @@ class App extends Component {
 			.then((res) => {
 				console.log(res)
 				if (res.body.loggedIn)
-					this.setState({ isLoggedIn: true, username: res.body.username, renderPage: true })
+					this.setState({ isLoggedIn: true, user: res.body.user, renderPage: true })
 				else
 					this.setState({ isLoggedIn: false, renderPage: true })
 			})
@@ -51,7 +52,7 @@ class App extends Component {
 
 	router() {
 		if (this.state.isLoggedIn)
-			return <ControlPanel logOut={this.logOut} username={this.state.username} />
+			return <ControlPanel logOut={this.logOut} user={this.state.user} />
 		else if (this.state.showRegister && !this.state.isLoggedIn)
 			return <RegisterUser onShowRegisterChange={this.handleShowRegisterChange} />
 		else
