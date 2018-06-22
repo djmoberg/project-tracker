@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Add from './Add'
 import { calculateHours, limitTo, uniqueYearList, getMonths } from '../../utils'
+import { deleteWork } from '../../APIish'
 
 import { Segment, Header, Form, Dropdown, Table, Modal, Button, Icon } from 'semantic-ui-react'
 
@@ -75,7 +76,7 @@ export default class UserOverview extends Component {
                     </Form.Group>
                 </Form>
 
-                <Table celled>
+                <Table celled selectable>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell>Dato</Table.HeaderCell>
@@ -88,7 +89,12 @@ export default class UserOverview extends Component {
                     <Table.Body>
                         {
                             this.filterOverview(this.state.overview).map((overview, index) =>
-                                <Table.Row key={index} >
+                                <Table.Row
+                                    key={index}
+                                    // onClick={() => {
+                                    //     this.setState({ editModalOpen: true, selectedWork: overview })
+                                    // }} 
+                                >
                                     <Table.Cell>{new Date(overview.workDate).toLocaleDateString()}</Table.Cell>
                                     <Table.Cell>{overview.workFrom} - {overview.workTo}</Table.Cell>
                                     <Table.Cell>{calculateHours(overview.workFrom, overview.workTo)}</Table.Cell>
@@ -103,7 +109,9 @@ export default class UserOverview extends Component {
                                             <Button icon="edit" onClick={() => {
                                                 this.setState({ editModalOpen: true, selectedWork: overview })
                                             }} />
-                                            <Button icon="delete" />
+                                            <Button icon="delete" onClick={() => {
+                                                deleteWork(overview.id, (res) => console.log(res))
+                                            }} />
                                         </Button.Group>
                                     </Table.Cell>
                                 </Table.Row>
@@ -139,11 +147,11 @@ export default class UserOverview extends Component {
                     <Modal.Content>
                         <Add mode="edit" header="Rediger arbeid" work={this.state.selectedWork} />
                     </Modal.Content>
-                    <Modal.Actions>
+                    {/* <Modal.Actions>
                         <Button color="red" onClick={() => this.setState({ modalOpen: false })} >
                             <Icon name="remove" /> Lukk
                         </Button>
-                    </Modal.Actions>
+                    </Modal.Actions> */}
                 </Modal>
             </Segment>
         )

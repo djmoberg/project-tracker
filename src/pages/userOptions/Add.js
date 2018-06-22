@@ -97,6 +97,21 @@ export default class Add extends Component {
             })
     }
 
+    editWork() {
+        request.put(process.env.REACT_APP_BACKEND + "work/edit")
+            .send({
+                workDate: this.state.workDate,
+                workFrom: this.state.workFrom,
+                workTo: this.state.workTo,
+                comment: this.state.comment,
+                id: this.props.work.id
+            })
+            .withCredentials()
+            .then((res) => {
+                console.log(res)
+            })
+    }
+
     validateWorkFromTo() {
         console.log(validFromTo(this.state.workFrom, this.state.workTo))
         if (validFromTo(this.state.workFrom, this.state.workTo)) {
@@ -235,6 +250,15 @@ export default class Add extends Component {
                             onClick={() => this.addWork()}
                         >
                             Legg til
+                        </Form.Button>
+                    }
+                    {this.props.mode === "edit" &&
+                        <Form.Button
+                            primary
+                            disabled={!this.allIsValid()}
+                            onClick={() => this.editWork()}
+                        >
+                            Lagre
                         </Form.Button>
                     }
                 </Form>

@@ -58,14 +58,14 @@ export default class RegisterUser extends Component {
             )
         else
             return (
-                <div>
+                <React.Fragment>
                     <ProjectExplorer
                         logOut={this.props.logOut}
                         user={this.props.user}
                         selectedProject={this.state.selectedProject}
                         onChangeProjectClick={this.handleChangeProjectClick}
                     />
-                </div>
+                </React.Fragment>
             )
     }
 }

@@ -4,6 +4,7 @@ import ProjectExplorerMenu from '../menus/ProjectExplorerMenu'
 import User from './User'
 import Overview from './Overview'
 import Admin from './Admin'
+import MySidebar from '../misc/MySidebar2'
 
 import { Segment, Header } from 'semantic-ui-react'
 
@@ -74,7 +75,7 @@ export default class ProjectExplorer extends Component {
     render() {
         return (
             <div>
-                <Header as="h2" style={{ textAlign: "center" }} >{this.state.project.name}</Header>
+                {/* <Header as="h2" style={{ textAlign: "center" }} >{this.state.project.name}</Header>
                 <ProjectExplorerMenu
                     logOut={this.props.logOut}
                     activeTab={this.state.activeTab}
@@ -84,7 +85,19 @@ export default class ProjectExplorer extends Component {
                 />
                 <Segment>
                     {this.renderPage(this.state.activeTab)}
-                </Segment>
+                </Segment> */}
+                <MySidebar
+                    logOut={this.props.logOut}
+                    activeTab={this.state.activeTab}
+                    onMenuClick={this.handleMenuClick}
+                    onChangeProjectClick={this.props.onChangeProjectClick}
+                    isAdmin={this.state.isAdmin}
+                >
+                    <Header as="h2" >Prosjekt: {this.state.project.name}</Header>
+                    {/* <Segment> */}
+                        {this.renderPage(this.state.activeTab)}
+                    {/* </Segment> */}
+                </MySidebar>
             </div>
         )
     }
