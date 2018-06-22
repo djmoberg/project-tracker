@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 
 import { hourOptions, minuteOptions, validDate, validFromTo, validComment, getHoursMinutes, hourNow } from '../../utils'
+import { editWork, addWork } from '../../APIish'
 
-import { Form, Dropdown, TextArea, Segment, Header, Label, Message } from 'semantic-ui-react'
-
-const request = require('superagent');
+import { Form, Dropdown, TextArea, Header, Label, Message } from 'semantic-ui-react'
 
 export default class Add extends Component {
     constructor(props) {
@@ -62,54 +61,30 @@ export default class Add extends Component {
         }
     }
 
-    addWork() {
-        request.post(process.env.REACT_APP_BACKEND + "work/add")
-            .send({ workDate: this.state.workDate, workFrom: this.state.workFrom, workTo: this.state.workTo, comment: this.state.comment })
-            .withCredentials()
-            .then((res) => {
-                if (res.body.status === "Work added") {
-                    this.props.updateOverview(res.body.overview)
-
-                    this.setState({
-                        workDate: "",
-                        comment: "",
-                        workDateError: false,
-                        workFromToError: false,
-                        commentError: false,
-                        selectedFromHour: hourNow(),
-                        selectedFromMinute: "00",
-                        selectedToHour: hourNow(),
-                        selectedToMinute: "15",
-                        workAdded: true
-                    }, () => {
-                        this.setState({
-                            workFrom: this.state.selectedFromHour + ":" + this.state.selectedFromMinute,
-                            workTo: this.state.selectedToHour + ":" + this.state.selectedToMinute
-                        }, () => {
-                            this.setState({
-                                isValidWorkDate: validDate(this.state.workDate),
-                                isValidWorkFromTo: validFromTo(this.state.workFrom, this.state.workTo),
-                                isValidComment: validComment(this.state.comment)
-                            })
-                        })
-                    })
-                }
+    resetFields() {
+        this.setState({
+            workDate: "",
+            comment: "",
+            workDateError: false,
+            workFromToError: false,
+            commentError: false,
+            selectedFromHour: hourNow(),
+            selectedFromMinute: "00",
+            selectedToHour: hourNow(),
+            selectedToMinute: "15",
+            workAdded: true
+        }, () => {
+            this.setState({
+                workFrom: this.state.selectedFromHour + ":" + this.state.selectedFromMinute,
+                workTo: this.state.selectedToHour + ":" + this.state.selectedToMinute
+            }, () => {
+                this.setState({
+                    isValidWorkDate: validDate(this.state.workDate),
+                    isValidWorkFromTo: validFromTo(this.state.workFrom, this.state.workTo),
+                    isValidComment: validComment(this.state.comment)
+                })
             })
-    }
-
-    editWork() {
-        request.put(process.env.REACT_APP_BACKEND + "work/edit")
-            .send({
-                workDate: this.state.workDate,
-                workFrom: this.state.workFrom,
-                workTo: this.state.workTo,
-                comment: this.state.comment,
-                id: this.props.work.id
-            })
-            .withCredentials()
-            .then((res) => {
-                console.log(res)
-            })
+        })
     }
 
     validateWorkFromTo() {
@@ -131,7 +106,7 @@ export default class Add extends Component {
 
     render() {
         return (
-            <Segment attached='bottom' >
+            <React.Fragment>
                 <Header as="h4" >{this.props.header}</Header>
                 {/* <Segment>
                     <h4>Fjernes</h4>
@@ -247,22 +222,42 @@ export default class Add extends Component {
                         <Form.Button
                             primary
                             disabled={!this.allIsValid()}
-                            onClick={() => this.addWork()}
+                            onClick={() => addWork({
+                                workDate: this.state.workDate,
+                                workFrom: this.state.workFrom,
+                                workTo: this.state.workTo,
+                                comment: this.state.comment
+                            }, (res) => {
+                                if (res.body.status === "Work added") {
+                                    this.props.updateOverview(res.body.overview)
+                                    this.resetFields()
+                                }
+                            })}
                         >
                             Legg til
                         </Form.Button>
                     }
                     {this.props.mode === "edit" &&
                         <Form.Button
-                            primary
+                            positive
                             disabled={!this.allIsValid()}
-                            onClick={() => this.editWork()}
+                            onClick={() => editWork({
+                                workDate: this.state.workDate,
+                                workFrom: this.state.workFrom,
+                                workTo: this.state.workTo,
+                                comment: this.state.comment,
+                                id: this.props.work.id
+                            }, (res) => {
+                                if (res.body.status === "Work edited") {
+                                    this.props.handleEdit(res.body.overview)
+                                }
+                            })}
                         >
                             Lagre
                         </Form.Button>
                     }
                 </Form>
-            </Segment>
+            </React.Fragment>
         )
     }
 }

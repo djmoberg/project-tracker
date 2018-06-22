@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 import { Menu, Dropdown } from 'semantic-ui-react'
 
 export default class ProjectExplorerMenu extends Component {

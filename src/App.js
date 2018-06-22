@@ -3,10 +3,9 @@ import React, { Component } from 'react';
 import Login from './pages/Login'
 import RegisterUser from './pages/RegisterUser'
 import ControlPanel from './pages/ControlPanel'
+import { isLoggedIn, logOut } from './APIish'
 
 import { Header, Segment, Loader, Dimmer } from 'semantic-ui-react'
-
-const request = require('superagent');
 
 class App extends Component {
 	constructor(props) {
@@ -25,25 +24,19 @@ class App extends Component {
 	}
 
 	fetchIsLoggedIn = () => {
-		request
-			.get(process.env.REACT_APP_BACKEND + "authenticate/loggedIn")
-			.withCredentials()
-			.then((res) => {
-				if (res.body.loggedIn)
-					this.setState({ isLoggedIn: true, user: res.body.user, renderPage: true })
-				else
-					this.setState({ isLoggedIn: false, renderPage: true })
-			})
+		isLoggedIn((res) => {
+			if (res.body.loggedIn)
+				this.setState({ isLoggedIn: true, user: res.body.user, renderPage: true })
+			else
+				this.setState({ isLoggedIn: false, renderPage: true })
+		})
 	}
 
 	logOut = () => {
-		request
-			.get(process.env.REACT_APP_BACKEND + "authenticate/logout")
-			.withCredentials()
-			.then((res) => {
-				localStorage.removeItem("selectedProject")
-				window.location.reload()
-			})
+		logOut((res) => {
+			localStorage.removeItem("selectedProject")
+			window.location.reload()
+		})
 	}
 
 	handleShowRegisterChange = (value) => {

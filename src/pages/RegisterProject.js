@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { Form, Message, Button, Header } from 'semantic-ui-react'
+import { registerProject } from '../APIish'
 
-const request = require('superagent');
+import { Form, Message, Button, Header } from 'semantic-ui-react'
 
 export default class RegisterProject extends Component {
     constructor(props) {
@@ -12,19 +12,6 @@ export default class RegisterProject extends Component {
             name: "",
             error: false
         }
-    }
-
-    registerProject() {
-        request.post(process.env.REACT_APP_BACKEND + "project/register")
-            .send({ name: this.state.name })
-            .withCredentials()
-            .then((res) => {
-                this.setState({ name: "" })
-                if (res.text === "Project added") {
-                    this.props.onRegistered("chooseProject")
-                }
-                console.log(res.text)
-            })
     }
 
     render() {
@@ -52,7 +39,13 @@ export default class RegisterProject extends Component {
                             primary
                             fluid
                             disabled={this.state.name.length === 0}
-                            onClick={() => this.registerProject()}
+                            onClick={() => {
+                                registerProject(this.state.name, (res) => {
+                                    this.setState({ name: "" })
+                                    if (res.text === "Project added")
+                                        this.props.onRegistered("chooseProject")
+                                })
+                            }}
                         >
                             Registrer
                         </Button>

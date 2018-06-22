@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { Header, Segment, Search, Button, Divider, List } from 'semantic-ui-react'
+import { getUsers, searchUser, addUser, removeUser } from '../APIish'
 
-const request = require('superagent');
+import { Header, Segment, Search, Button, Divider, List } from 'semantic-ui-react'
 
 export default class Admin extends Component {
     constructor(props) {
@@ -23,12 +23,9 @@ export default class Admin extends Component {
     }
 
     fetchUsers() {
-        request
-            .get(process.env.REACT_APP_BACKEND + "project/users")
-            .withCredentials()
-            .then((res) => {
-                this.setState({ users: res.body })
-            })
+        getUsers((res) => {
+            this.setState({ users: res.body })
+        })
     }
 
     // findUser(input) {
@@ -49,25 +46,22 @@ export default class Admin extends Component {
         this.setState({ buttonDisabled: true }, () => {
             if (value.length !== 0) {
                 this.setState({ isLoading: true, value }, () => {
-                    request
-                        .get(process.env.REACT_APP_BACKEND + "users/find/" + value)
-                        .withCredentials()
-                        .then((res) => {
-                            let results = res.body.reduce((result, user) => {
-                                if (user.name === value && !this.state.users.some((user2) => { return user2.name === user.name })) {
-                                    this.setState({ buttonDisabled: false })
-                                }
-                                if (!this.state.users.some((user2) => { return user2.name === user.name }))
-                                    result.push({
-                                        title: user.name,
-                                        // description: "Bruker",
-                                        // image: "https://s3.amazonaws.com/uifaces/faces/twitter/Stievius/128.jpg",
-                                        // price: "$12.76"
-                                    })
-                                return result
-                            }, [])
-                            this.setState({ isLoading: false, results })
-                        })
+                    searchUser(value, (res) => {
+                        let results = res.body.reduce((result, user) => {
+                            if (user.name === value && !this.state.users.some((user2) => { return user2.name === user.name })) {
+                                this.setState({ buttonDisabled: false })
+                            }
+                            if (!this.state.users.some((user2) => { return user2.name === user.name }))
+                                result.push({
+                                    title: user.name,
+                                    // description: "Bruker",
+                                    // image: "https://s3.amazonaws.com/uifaces/faces/twitter/Stievius/128.jpg",
+                                    // price: "$12.76"
+                                })
+                            return result
+                        }, [])
+                        this.setState({ isLoading: false, results })
+                    })
                 })
             } else {
                 this.setState({ results: [], value })
@@ -76,29 +70,21 @@ export default class Admin extends Component {
     }
 
     addUser = (username) => {
-        request
-            .post(process.env.REACT_APP_BACKEND + "project/addUser")
-            .send({ username })
-            .withCredentials()
-            .then((res) => {
-                if (res.text === "User added") {
-                    this.setState({ value: "", buttonDisabled: true })
-                    this.fetchUsers()
-                }
-            })
+        addUser(username, (res) => {
+            if (res.text === "User added") {
+                this.setState({ value: "", buttonDisabled: true })
+                this.fetchUsers()
+            }
+        })
     }
 
     removeUser = (username) => {
-        request
-            .delete(process.env.REACT_APP_BACKEND + "project/removeUser")
-            .send({ username })
-            .withCredentials()
-            .then((res) => {
-                if (res.text === "User removed") {
-                    this.fetchUsers()
-                    this.setState({ removedUsername: username })
-                }
-            })
+        removeUser(username, (res) => {
+            if (res.text === "User removed") {
+                this.fetchUsers()
+                this.setState({ removedUsername: username })
+            }
+        })
     }
 
     render() {

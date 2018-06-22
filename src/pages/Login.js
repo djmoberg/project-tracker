@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { Form, Message, Button, Header } from 'semantic-ui-react'
+import { login } from '../APIish'
 
-const request = require('superagent');
+import { Form, Message, Button, Header } from 'semantic-ui-react'
 
 export default class Login extends Component {
     constructor(props) {
@@ -19,19 +19,17 @@ export default class Login extends Component {
     checkLoginInformation() {
         this.setState({ loading: true })
 
-        request.post(process.env.REACT_APP_BACKEND + "authenticate/login")
-            .send({ username: this.state.name, password: this.state.password })
-            .withCredentials()
-            .on('error', (err) => {
-                if (err.status === 401)
-                    this.setState({ error: true, password: "", loading: false })
-            })
-            .then((res) => {
-                this.setState({ password: "", loading: false })
-                if (res.text === "Logged in") {
-                    this.props.fetchIsLoggedIn()
-                }
-            })
+        login({
+            username: this.state.name,
+            password: this.state.password
+        }, (err) => {
+            if (err.status === 401)
+                this.setState({ error: true, password: "", loading: false })
+        }, (res) => {
+            this.setState({ password: "", loading: false })
+            if (res.text === "Logged in")
+                this.props.fetchIsLoggedIn()
+        })
     }
 
     render() {

@@ -4,7 +4,7 @@ import Add from './Add'
 import { calculateHours, limitTo, uniqueYearList, getMonths } from '../../utils'
 import { deleteWork } from '../../APIish'
 
-import { Segment, Header, Form, Dropdown, Table, Modal, Button, Icon } from 'semantic-ui-react'
+import { Segment, Header, Form, Dropdown, Table, Modal, Button } from 'semantic-ui-react'
 
 export default class UserOverview extends Component {
     constructor(props) {
@@ -19,11 +19,13 @@ export default class UserOverview extends Component {
             editModalOpen: false,
             selectedWork: {}
         }
-
-        // this.fetchOverview()
     }
 
     componentWillMount() {
+        this.setOverview()
+    }
+
+    setOverview() {
         let fOverview = this.props.overview.filter(overview => {
             if (overview.name === this.props.username)
                 return overview
@@ -45,6 +47,16 @@ export default class UserOverview extends Component {
         return overview.filter(overview => {
             return this.isCurrentlySelected(overview)
         })
+    }
+
+    handleEdit = (overview) => {
+        this.setState({ editModalOpen: false, selectedWork: {} })
+        this.props.updateOverview(overview)
+        this.setOverview()
+    }
+
+    openEdit(overview) {
+        this.setState({ editModalOpen: true, selectedWork: overview })
     }
 
     render() {
@@ -91,13 +103,22 @@ export default class UserOverview extends Component {
                             this.filterOverview(this.state.overview).map((overview, index) =>
                                 <Table.Row
                                     key={index}
-                                    // onClick={() => {
-                                    //     this.setState({ editModalOpen: true, selectedWork: overview })
-                                    // }} 
+                                // onClick={() => {
+                                //     this.setState({ editModalOpen: true, selectedWork: overview })
+                                // }} 
                                 >
-                                    <Table.Cell>{new Date(overview.workDate).toLocaleDateString()}</Table.Cell>
-                                    <Table.Cell>{overview.workFrom} - {overview.workTo}</Table.Cell>
-                                    <Table.Cell>{calculateHours(overview.workFrom, overview.workTo)}</Table.Cell>
+                                    <Table.Cell
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => { this.openEdit(overview) }}
+                                    >{new Date(overview.workDate).toLocaleDateString()}</Table.Cell>
+                                    <Table.Cell
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => { this.openEdit(overview) }}
+                                    >{overview.workFrom} - {overview.workTo}</Table.Cell>
+                                    <Table.Cell
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => { this.openEdit(overview) }}
+                                    >{calculateHours(overview.workFrom, overview.workTo)}</Table.Cell>
                                     <Table.Cell
                                         style={{ cursor: "pointer" }}
                                         onClick={() => this.setState({ modalOpen: true, selectedComment: overview.comment })}
@@ -107,10 +128,15 @@ export default class UserOverview extends Component {
                                     <Table.Cell collapsing>
                                         <Button.Group basic size="small">
                                             <Button icon="edit" onClick={() => {
-                                                this.setState({ editModalOpen: true, selectedWork: overview })
+                                                this.openEdit(overview)
                                             }} />
                                             <Button icon="delete" onClick={() => {
-                                                deleteWork(overview.id, (res) => console.log(res))
+                                                deleteWork(overview.id, (res) => {
+                                                    if (res.body.status === "Work deleted") {
+                                                        this.props.updateOverview(res.body.overview)
+                                                        this.setOverview()
+                                                    }
+                                                })
                                             }} />
                                         </Button.Group>
                                     </Table.Cell>
@@ -145,7 +171,8 @@ export default class UserOverview extends Component {
                 >
                     <Header icon="edit" content="Rediger" />
                     <Modal.Content>
-                        <Add mode="edit" header="Rediger arbeid" work={this.state.selectedWork} />
+                        <Add mode="edit" header="Rediger arbeid" work={this.state.selectedWork} handleEdit={this.handleEdit} />
+                        {/* <Button negative >Slett</Button> */}
                     </Modal.Content>
                     {/* <Modal.Actions>
                         <Button color="red" onClick={() => this.setState({ modalOpen: false })} >

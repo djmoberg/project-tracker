@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+
 import Add from './userOptions/Add'
 import UserOverview from './userOptions/UserOverview'
 
-import { Menu, Header } from 'semantic-ui-react'
+import { Menu, Header, Segment } from 'semantic-ui-react'
 
 export default class User extends Component {
     constructor(props) {
@@ -14,8 +15,8 @@ export default class User extends Component {
     }
 
     componentDidMount() {
-		// const activeTab = localStorage.getItem('activeUserTab')
-		// if (activeTab)
+        // const activeTab = localStorage.getItem('activeUserTab')
+        // if (activeTab)
         // 	this.setState({activeTab: activeTab})
     }
 
@@ -42,11 +43,13 @@ export default class User extends Component {
                 </Menu>
 
                 {this.state.activeTab === "add" &&
-                    <Add mode="add" header="Legg til arbeid" updateOverview={this.props.updateOverview} />
+                    <Segment attached='bottom' >
+                        <Add mode="add" header="Legg til arbeid" updateOverview={this.props.updateOverview} />
+                    </Segment>
                 }
 
                 {this.state.activeTab === "userOverview" &&
-                    <UserOverview overview={this.props.overview} username={this.props.user.username} />
+                    <UserOverview overview={this.props.overview} username={this.props.user.username} updateOverview={this.props.updateOverview} />
                 }
 
             </div>

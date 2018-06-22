@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 
-import ProjectExplorerMenu from '../menus/ProjectExplorerMenu'
+// import ProjectExplorerMenu from '../menus/ProjectExplorerMenu'
 import User from './User'
 import Overview from './Overview'
 import Admin from './Admin'
 import MySidebar from '../misc/MySidebar2'
+import { getProject } from '../APIish'
 
-import { Segment, Header } from 'semantic-ui-react'
-
-const request = require('superagent');
+import { Header } from 'semantic-ui-react'
 
 export default class ProjectExplorer extends Component {
     constructor(props) {
@@ -41,13 +40,10 @@ export default class ProjectExplorer extends Component {
     }
 
     fetchProject(projectId) {
-        request
-            .get(process.env.REACT_APP_BACKEND + "project/" + projectId)
-            .withCredentials()
-            .then((res) => {
-                this.setState({ project: res.body })
-                localStorage.setItem('selectedProject', this.props.selectedProject)
-            })
+        getProject(projectId, (res) => {
+            this.setState({ project: res.body })
+            localStorage.setItem('selectedProject', this.props.selectedProject)
+        })
     }
 
     updateOverview = (overview) => {
@@ -95,7 +91,7 @@ export default class ProjectExplorer extends Component {
                 >
                     <Header as="h2" >Prosjekt: {this.state.project.name}</Header>
                     {/* <Segment> */}
-                        {this.renderPage(this.state.activeTab)}
+                    {this.renderPage(this.state.activeTab)}
                     {/* </Segment> */}
                 </MySidebar>
             </div>

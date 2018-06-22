@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { Form, Header } from 'semantic-ui-react'
+import { getProjects } from '../APIish'
 
-const request = require('superagent');
+import { Form, Header } from 'semantic-ui-react'
 
 export default class RegisterUser extends Component {
     constructor(props) {
@@ -15,22 +15,15 @@ export default class RegisterUser extends Component {
     }
 
     componentWillMount() {
-        this.fetchProjects()
-    }
+        getProjects((res) => {
+            let projects = []
 
-    fetchProjects() {
-        request
-            .get(process.env.REACT_APP_BACKEND + "projects")
-            .withCredentials()
-            .then((res) => {
-                let projects = []
-
-                res.body.forEach((project) => {
-                    projects.push({ text: project.name, value: project.id })
-                })
-
-                this.setState({ projects })
+            res.body.forEach((project) => {
+                projects.push({ text: project.name, value: project.id })
             })
+
+            this.setState({ projects })
+        })
     }
 
     handleSelectedProjectChange = (_, { name, value }) => this.setState({ selectedProject: value })
