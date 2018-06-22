@@ -18,7 +18,7 @@ export default class RegisterUser extends Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         const selectedProject = localStorage.getItem('selectedProject')
         if (selectedProject)
             this.handleProjectSelected(selectedProject)

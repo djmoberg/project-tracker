@@ -65,7 +65,7 @@ export default class ProjectExplorer extends Component {
             case "overview":
                 return <Overview overview={this.state.project.overview} />
             case "admin":
-                return <Admin />
+                return <Admin user={this.props.user} />
             default:
                 break;
         }

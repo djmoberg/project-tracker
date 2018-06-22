@@ -29,7 +29,6 @@ class App extends Component {
 			.get(process.env.REACT_APP_BACKEND + "authenticate/loggedIn")
 			.withCredentials()
 			.then((res) => {
-				console.log(res)
 				if (res.body.loggedIn)
 					this.setState({ isLoggedIn: true, user: res.body.user, renderPage: true })
 				else
@@ -42,6 +41,7 @@ class App extends Component {
 			.get(process.env.REACT_APP_BACKEND + "authenticate/logout")
 			.withCredentials()
 			.then((res) => {
+				localStorage.removeItem("selectedProject")
 				window.location.reload()
 			})
 	}

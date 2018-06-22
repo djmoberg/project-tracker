@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { hourOptions, minuteOptions, validDate, validFromTo, validComment, getHoursMinutes } from '../../utils'
+import { hourOptions, minuteOptions, validDate, validFromTo, validComment, getHoursMinutes, hourNow } from '../../utils'
 
 import { Form, Dropdown, TextArea, Segment, Header, Label, Message } from 'semantic-ui-react'
 
@@ -21,9 +21,9 @@ export default class Add extends Component {
             workDateError: false,
             workFromToError: false,
             commentError: false,
-            selectedFromHour: new Date().getHours().toString(),
+            selectedFromHour: hourNow(),
             selectedFromMinute: "00",
-            selectedToHour: new Date().getHours().toString(),
+            selectedToHour: hourNow(),
             selectedToMinute: "15",
             workAdded: false
         }
@@ -76,9 +76,9 @@ export default class Add extends Component {
                         workDateError: false,
                         workFromToError: false,
                         commentError: false,
-                        selectedFromHour: new Date().getHours().toString(),
+                        selectedFromHour: hourNow(),
                         selectedFromMinute: "00",
-                        selectedToHour: new Date().getHours().toString(),
+                        selectedToHour: hourNow(),
                         selectedToMinute: "15",
                         workAdded: true
                     }, () => {
@@ -230,6 +230,7 @@ export default class Add extends Component {
                     />
                     {this.props.mode === "add" &&
                         <Form.Button
+                            primary
                             disabled={!this.allIsValid()}
                             onClick={() => this.addWork()}
                         >

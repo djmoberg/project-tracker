@@ -133,3 +133,11 @@ export function validFromTo(from, to) {
 export function validComment(comment) {
     return (comment.length !== 0)
 }
+
+export function hourNow() {
+    let h = new Date().getHours()
+    if (h < 10)
+        return "0" + h.toString()
+    else
+        return h.toString()
+}

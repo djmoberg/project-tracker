@@ -31,7 +31,6 @@ export default class Login extends Component {
                 if (res.text === "Logged in") {
                     this.props.fetchIsLoggedIn()
                 }
-                console.log(res.text)
             })
     }
 
