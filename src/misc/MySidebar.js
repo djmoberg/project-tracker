@@ -7,12 +7,12 @@ export default class MySidebar extends Component {
         const activeTab = this.props.activeTab
 
         return (
-            <Sidebar.Pushable as={Segment} style={{ minHeight: "100vh" }} >
+            <Sidebar.Pushable as={Segment} style={{ minHeight: "100vh" }} onClick={() => this.props.onOpenProjectExplorerMenu(false)} >
                 <Sidebar
                     as={Menu}
-                    animation='push'
+                    animation='overlay'
                     width='thin'
-                    visible={true}
+                    visible={this.props.open}
                     icon='labeled'
                     vertical
                     inverted
@@ -20,7 +20,10 @@ export default class MySidebar extends Component {
                     <Menu.Item
                         name='user'
                         active={activeTab === "user"}
-                        onClick={() => this.props.onMenuClick("user")}
+                        onClick={() => {
+                            this.props.onMenuClick("user")
+                            this.props.onOpenProjectExplorerMenu(false)
+                        }}
                     >
                         <Icon name='user' />
                         Bruker
@@ -28,7 +31,10 @@ export default class MySidebar extends Component {
                     <Menu.Item
                         name='overview'
                         active={activeTab === "overview"}
-                        onClick={() => this.props.onMenuClick("overview")}
+                        onClick={() => {
+                            this.props.onMenuClick("overview")
+                            this.props.onOpenProjectExplorerMenu(false)
+                        }}
                     >
                         <Icon name='calendar' />
                         Oversikt
@@ -37,7 +43,10 @@ export default class MySidebar extends Component {
                         <Menu.Item
                             name='admin'
                             active={activeTab === "admin"}
-                            onClick={() => this.props.onMenuClick("admin")}
+                            onClick={() => {
+                                this.props.onMenuClick("admin")
+                                this.props.onOpenProjectExplorerMenu(false)
+                            }}
                         >
                             <Icon name='user plus' />
                             Admin
@@ -45,14 +54,20 @@ export default class MySidebar extends Component {
                     }
                     <Menu.Item
                         name='changeProject'
-                        onClick={() => this.props.onChangeProjectClick()}
+                        onClick={() => {
+                            this.props.onChangeProjectClick()
+                            this.props.onOpenProjectExplorerMenu(false)
+                        }}
                     >
                         <Icon name='arrow left' />
                         Endre prosjekt
                     </Menu.Item>
                     <Menu.Item
                         name='logOut'
-                        onClick={() => this.props.logOut()}
+                        onClick={() => {
+                            this.props.logOut()
+                            this.props.onOpenProjectExplorerMenu(false)
+                        }}
                     >
                         <Icon name='log out' />
                         Logg ut

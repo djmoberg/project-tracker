@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { Form, Message, Button, Header } from 'semantic-ui-react'
+import { registerUser, isUsernameValid } from '../APIish'
 
-const request = require('superagent');
+import { Form, Message, Button, Header } from 'semantic-ui-react'
 
 //TODO
 //Feilmeldinger
@@ -22,32 +22,31 @@ export default class RegisterUser extends Component {
             passwordIsValid: false,
             emailIsValid: true, //endre
             loading: false,
-            usernameInputIcon: " "
+            usernameInputIcon: " ",
+            passwordInputIcon: " "
         }
     }
 
     registerUser() {
-        request.post(process.env.REACT_APP_BACKEND + "user/register")
-            .send({ username: this.state.username, password: this.state.password })
-            .then((res) => {
-                this.setState({ password: "" })
-                if (res.text === "User added") {
-                    this.props.onShowRegisterChange(false)
-                }
-                console.log(res.text)
-            })
+        registerUser({
+            username: this.state.username,
+            password: this.state.password
+        }, (res) => {
+            this.setState({ password: "" })
+            if (res.text === "User added")
+                this.props.onShowRegisterChange(false)
+        })
     }
 
     isUsernameValid(username) {
         if (username.length !== 0) {
             this.setState({ loading: true })
-            request.get(process.env.REACT_APP_BACKEND + "user/exists/" + username)
-                .then((res) => {
-                    if (res.text === "false")
-                        this.setState({ usernameIsValid: true, loading: false, usernameInputIcon: "check green" })
-                    else
-                        this.setState({ usernameIsValid: false, loading: false, usernameInputIcon: "warning sign red" })
-                })
+            isUsernameValid(username, (res) => {
+                if (res.text === "false")
+                    this.setState({ usernameIsValid: true, loading: false, usernameInputIcon: "check green" })
+                else
+                    this.setState({ usernameIsValid: false, loading: false, usernameInputIcon: "warning sign red" })
+            })
         } else {
             this.setState({ usernameIsValid: false, usernameInputIcon: " " })
         }
@@ -92,11 +91,12 @@ export default class RegisterUser extends Component {
                             this.isUsernameValid(this.state.username)
                         })}
                         onFocus={() => this.setState({ error: false })}
-                        // onBlur={() => this.isUsernameValid(this.state.username)}
+                    // onBlur={() => this.isUsernameValid(this.state.username)}
                     />
                     {/* <Label color="red" basic pointing>Please enter a value</Label> */}
                     <Form.Input
                         required
+                        icon={this.state.passwordInputIcon}
                         type="password"
                         label="Passord"
                         placeholder="********"
@@ -111,17 +111,27 @@ export default class RegisterUser extends Component {
                     />
                     <Form.Input
                         required
+                        error={this.state.password2Error}
+                        icon={this.state.passwordInputIcon}
                         type="password"
                         label="Gjenta Passord"
                         placeholder="********"
                         value={this.state.password2}
                         onChange={(_, { value }) => this.setState({ password2: value }, () => {
+                            this.setState({ password2Error: false })
+
                             if (this.isPasswordValid(this.state.password, this.state.password2))
-                                this.setState({ passwordIsValid: true })
+                                this.setState({ passwordIsValid: true, passwordInputIcon: "check green" })
+                            else if (this.state.password.length < this.state.password2.length)
+                                this.setState({ passwordIsValid: false, password2Error: true, passwordInputIcon: "warning sign red" })
                             else
-                                this.setState({ passwordIsValid: false })
+                                this.setState({ passwordIsValid: false, passwordInputIcon: " " })
                         })}
-                        onFocus={() => this.setState({ error: false })}
+                        onFocus={() => this.setState({ error: false, password2Error: false })}
+                        onBlur={() => {
+                            if (this.state.password !== this.state.password2)
+                                this.setState({ password2Error: true, passwordInputIcon: "warning sign red" })
+                        }}
                     />
                     <Form.Input
                         type="email"

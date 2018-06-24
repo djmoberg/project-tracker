@@ -5,7 +5,7 @@ import RegisterUser from './pages/RegisterUser'
 import ControlPanel from './pages/ControlPanel'
 import { isLoggedIn, logOut } from './APIish'
 
-import { Header, Segment, Loader, Dimmer } from 'semantic-ui-react'
+import { Header, Segment, Loader, Dimmer, Button, Responsive } from 'semantic-ui-react'
 
 class App extends Component {
 	constructor(props) {
@@ -15,7 +15,8 @@ class App extends Component {
 			isLoggedIn: false,
 			showRegister: false,
 			renderPage: false,
-			user: {}
+			user: {},
+			openProjectExplorerMenu: false
 		}
 	}
 
@@ -43,9 +44,20 @@ class App extends Component {
 		this.setState({ showRegister: value })
 	}
 
+	handleOpenProjectExplorerMenu = (value) => {
+		this.setState({ openProjectExplorerMenu: value })
+	}
+
 	router() {
 		if (this.state.isLoggedIn)
-			return <ControlPanel logOut={this.logOut} user={this.state.user} />
+			return (
+				<ControlPanel
+					logOut={this.logOut}
+					user={this.state.user}
+					openProjectExplorerMenu={this.state.openProjectExplorerMenu}
+					onOpenProjectExplorerMenu={this.handleOpenProjectExplorerMenu}
+				/>
+			)
 		else if (this.state.showRegister && !this.state.isLoggedIn)
 			return <RegisterUser onShowRegisterChange={this.handleShowRegisterChange} />
 		else
@@ -56,8 +68,16 @@ class App extends Component {
 		if (this.state.renderPage)
 			return (
 				<div>
-					<Segment basic inverted textAlign="center" >
-						<Header as="h1">Project Tracker</Header>
+					<Segment basic inverted >
+						<Header as="h1" textAlign="center" >Project Tracker</Header>
+						<Responsive maxWidth={1000}>
+							<Button
+								size="big"
+								color="black"
+								icon="bars"
+								onClick={() => this.handleOpenProjectExplorerMenu(!this.state.openProjectExplorerMenu)}
+							/>
+						</Responsive>
 					</Segment>
 					<div className="App" >
 						{this.router()}

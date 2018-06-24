@@ -35,6 +35,25 @@ export function login(data, errCallback, thenCallback) {
         })
 }
 
+//RegisterUser.js
+export function registerUser(data, callback) {
+    request.post(process.env.REACT_APP_BACKEND + "user/register")
+        .send({
+            username: data.username,
+            password: data.password
+        })
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function isUsernameValid(username, callback) {
+    request.get(process.env.REACT_APP_BACKEND + "user/exists/" + username)
+    .then((res) => {
+        callback(res)
+    })
+}
+
 //ProjectExplorer.js
 export function getProject(projectId, callback) {
     request

@@ -40,6 +40,11 @@ export default class User extends Component {
                         active={this.state.activeTab === "userOverview"}
                         onClick={() => this.handleMenuClick("userOverview")}
                     />
+                    <Menu.Item
+                        name='Innstillinger'
+                        active={this.state.activeTab === "settings"}
+                        onClick={() => this.handleMenuClick("settings")}
+                    />
                 </Menu>
 
                 {this.state.activeTab === "add" &&

@@ -64,6 +64,8 @@ export default class RegisterUser extends Component {
                         user={this.props.user}
                         selectedProject={this.state.selectedProject}
                         onChangeProjectClick={this.handleChangeProjectClick}
+                        openProjectExplorerMenu={this.props.openProjectExplorerMenu}
+                        onOpenProjectExplorerMenu={this.props.onOpenProjectExplorerMenu}
                     />
                 </React.Fragment>
             )

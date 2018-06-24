@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { hourOptions, minuteOptions, validDate, validFromTo, validComment, getHoursMinutes, hourNow } from '../../utils'
 import { editWork, addWork } from '../../APIish'
 
-import { Form, Dropdown, TextArea, Header, Label, Message } from 'semantic-ui-react'
+import { Form, Dropdown, TextArea, Header, Label, Message, Accordion } from 'semantic-ui-react'
 
 export default class Add extends Component {
     constructor(props) {
@@ -103,6 +103,20 @@ export default class Add extends Component {
             this.state.isValidComment
         )
     }
+
+    panels = [
+        {
+            title: 'Legg til personer på samme arbeid',
+            content: {
+                content: (
+                    <div>
+                        <Form.Checkbox label={"Test"} />
+                        <Form.Checkbox label={"Test2"} />
+                    </div>
+                )
+            },
+        },
+    ]
 
     render() {
         return (
@@ -213,6 +227,7 @@ export default class Add extends Component {
                             }}
                         />
                     </Form.Field>
+                    <Accordion as={Form.Field} panels={this.panels} />
                     <Message
                         success
                         header='Arbeid lagt til!'

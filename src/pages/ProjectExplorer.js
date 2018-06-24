@@ -4,10 +4,11 @@ import React, { Component } from 'react';
 import User from './User'
 import Overview from './Overview'
 import Admin from './Admin'
-import MySidebar from '../misc/MySidebar2'
+import MySidebar from '../misc/MySidebar'
+import MySidebar2 from '../misc/MySidebar2'
 import { getProject } from '../APIish'
 
-import { Header } from 'semantic-ui-react'
+import { Header, Responsive } from 'semantic-ui-react'
 
 export default class ProjectExplorer extends Component {
     constructor(props) {
@@ -82,18 +83,36 @@ export default class ProjectExplorer extends Component {
                 <Segment>
                     {this.renderPage(this.state.activeTab)}
                 </Segment> */}
-                <MySidebar
-                    logOut={this.props.logOut}
-                    activeTab={this.state.activeTab}
-                    onMenuClick={this.handleMenuClick}
-                    onChangeProjectClick={this.props.onChangeProjectClick}
-                    isAdmin={this.state.isAdmin}
-                >
-                    <Header as="h2" >Prosjekt: {this.state.project.name}</Header>
-                    {/* <Segment> */}
-                    {this.renderPage(this.state.activeTab)}
-                    {/* </Segment> */}
-                </MySidebar>
+                <Responsive minWidth={1001}>
+                    <MySidebar2
+                        logOut={this.props.logOut}
+                        activeTab={this.state.activeTab}
+                        onMenuClick={this.handleMenuClick}
+                        onChangeProjectClick={this.props.onChangeProjectClick}
+                        isAdmin={this.state.isAdmin}
+                    >
+                        <Header as="h2" >Prosjekt: {this.state.project.name}</Header>
+                        {/* <Segment> */}
+                        {this.renderPage(this.state.activeTab)}
+                        {/* </Segment> */}
+                    </MySidebar2>
+                </Responsive>
+                <Responsive maxWidth={1000}>
+                    <MySidebar
+                        logOut={this.props.logOut}
+                        activeTab={this.state.activeTab}
+                        onMenuClick={this.handleMenuClick}
+                        onChangeProjectClick={this.props.onChangeProjectClick}
+                        isAdmin={this.state.isAdmin}
+                        open={this.props.openProjectExplorerMenu}
+                        onOpenProjectExplorerMenu={this.props.onOpenProjectExplorerMenu}
+                    >
+                        <Header as="h2" >Prosjekt: {this.state.project.name}</Header>
+                        {/* <Segment> */}
+                        {this.renderPage(this.state.activeTab)}
+                        {/* </Segment> */}
+                    </MySidebar>
+                </Responsive>
             </div>
         )
     }
