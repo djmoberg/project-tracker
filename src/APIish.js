@@ -49,9 +49,9 @@ export function registerUser(data, callback) {
 
 export function isUsernameValid(username, callback) {
     request.get(process.env.REACT_APP_BACKEND + "user/exists/" + username)
-    .then((res) => {
-        callback(res)
-    })
+        .then((res) => {
+            callback(res)
+        })
 }
 
 //ProjectExplorer.js
@@ -116,6 +116,16 @@ export function addUser(username, callback) {
 export function removeUser(username, callback) {
     request
         .delete(process.env.REACT_APP_BACKEND + "project/removeUser")
+        .send({ username: username })
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function makeAdmin(username, callback) {
+    request
+        .post(process.env.REACT_APP_BACKEND + "project/makeAdmin")
         .send({ username: username })
         .withCredentials()
         .then((res) => {

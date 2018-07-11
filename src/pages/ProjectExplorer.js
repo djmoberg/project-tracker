@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import User from './User'
 import Overview from './Overview'
 import Admin from './Admin'
+import WorkTimer from './WorkTimer'
 import MySidebar from '../misc/MySidebar'
 import MySidebar2 from '../misc/MySidebar2'
 import { getProject } from '../APIish'
@@ -64,6 +65,8 @@ export default class ProjectExplorer extends Component {
                 return <Overview overview={this.state.project.overview} />
             case "admin":
                 return <Admin user={this.props.user} />
+            case "workTimer":
+                return <WorkTimer />
             default:
                 break;
         }
@@ -90,6 +93,7 @@ export default class ProjectExplorer extends Component {
                         onMenuClick={this.handleMenuClick}
                         onChangeProjectClick={this.props.onChangeProjectClick}
                         isAdmin={this.state.isAdmin}
+                        username={this.props.user.username}
                     >
                         <Header as="h2" >Prosjekt: {this.state.project.name}</Header>
                         {/* <Segment> */}
@@ -104,6 +108,7 @@ export default class ProjectExplorer extends Component {
                         onMenuClick={this.handleMenuClick}
                         onChangeProjectClick={this.props.onChangeProjectClick}
                         isAdmin={this.state.isAdmin}
+                        username={this.props.user.username}
                         open={this.props.openProjectExplorerMenu}
                         onOpenProjectExplorerMenu={this.props.onOpenProjectExplorerMenu}
                     >

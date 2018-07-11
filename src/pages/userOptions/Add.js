@@ -104,19 +104,19 @@ export default class Add extends Component {
         )
     }
 
-    panels = [
-        {
-            title: 'Legg til personer på samme arbeid',
-            content: {
-                content: (
-                    <div>
-                        <Form.Checkbox label={"Test"} />
-                        <Form.Checkbox label={"Test2"} />
-                    </div>
-                )
-            },
-        },
-    ]
+    // panels = [
+    //     {
+    //         title: 'Legg til personer på samme arbeid',
+    //         content: {
+    //             content: (
+    //                 <div>
+    //                     <Form.Checkbox label={"Test"} />
+    //                     <Form.Checkbox label={"Test2"} />
+    //                 </div>
+    //             )
+    //         },
+    //     },
+    // ]
 
     render() {
         return (

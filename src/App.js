@@ -5,7 +5,7 @@ import RegisterUser from './pages/RegisterUser'
 import ControlPanel from './pages/ControlPanel'
 import { isLoggedIn, logOut } from './APIish'
 
-import { Header, Segment, Loader, Dimmer, Button, Responsive } from 'semantic-ui-react'
+import { Header, Segment, Loader, Dimmer, Button, Responsive, Grid, Image } from 'semantic-ui-react'
 
 class App extends Component {
 	constructor(props) {
@@ -68,17 +68,29 @@ class App extends Component {
 		if (this.state.renderPage)
 			return (
 				<div>
-					<Segment basic inverted >
-						<Header as="h1" textAlign="center" >Project Tracker</Header>
-						<Responsive maxWidth={1000}>
-							<Button
-								size="big"
-								color="black"
-								icon="bars"
-								onClick={() => this.handleOpenProjectExplorerMenu(!this.state.openProjectExplorerMenu)}
-							/>
-						</Responsive>
-					</Segment>
+					<div style={{ backgroundColor: "black" }} >
+						<Grid columns="equal" padded >
+							<Grid.Row>
+								<Grid.Column>
+
+								</Grid.Column>
+								<Grid.Column textAlign="center" >
+									{/* <Header as="h1" textAlign="center" style={{ color: "white" }} >Project Tracker</Header> */}
+									<Image src="http://www.facelex.com/img/cooltext292638607517631.png" centered />
+								</Grid.Column>
+								<Grid.Column textAlign="right" >
+									<Responsive maxWidth={1000}>
+										<Button
+											size="big"
+											color="black"
+											icon="bars"
+											onClick={() => this.handleOpenProjectExplorerMenu(!this.state.openProjectExplorerMenu)}
+										/>
+									</Responsive>
+								</Grid.Column>
+							</Grid.Row>
+						</Grid>
+					</div>
 					<div className="App" >
 						{this.router()}
 					</div>

@@ -9,14 +9,22 @@ export default class MySidebar extends Component {
         return (
             <Grid>
                 <Grid.Column width={2}>
-                    <Menu fluid vertical inverted icon='labeled' style={{ minHeight: "100vh" }}>
+                    <Menu fluid vertical inverted icon='labeled' style={{ minHeight: "100vh", borderRadius: 0 }}>
+                        <Menu.Item
+                            name='workTimer'
+                            active={activeTab === "workTimer"}
+                            onClick={() => this.props.onMenuClick("workTimer")}
+                        >
+                            <Icon name='time' />
+                            Stemplingsur
+                        </Menu.Item>
                         <Menu.Item
                             name='user'
                             active={activeTab === "user"}
                             onClick={() => this.props.onMenuClick("user")}
                         >
                             <Icon name='user' />
-                            Bruker
+                            {this.props.username}
                         </Menu.Item>
                         <Menu.Item
                             name='overview'

@@ -141,3 +141,27 @@ export function hourNow() {
     else
         return h.toString()
 }
+
+export function roundMinutes(m) {
+    if (m <= 7)
+        return "00"
+    else if (m >= 8 && m <= 22)
+        return "15"
+    else if (m >= 23 && m <= 37)
+        return "30"
+    else if (m >= 38 && m <= 52)
+        return "45"
+    else
+        return "00"
+}
+
+export function roundTime(time) {
+    let t = new Date(time)
+    let h = t.getHours()
+    let m = t.getMinutes()
+    
+    if (m >= 53)
+        return (h + 1) + ":" + roundMinutes(m)
+    else
+        return h + ":" + roundMinutes(m)
+}

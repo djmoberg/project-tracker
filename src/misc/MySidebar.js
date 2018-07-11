@@ -7,16 +7,28 @@ export default class MySidebar extends Component {
         const activeTab = this.props.activeTab
 
         return (
-            <Sidebar.Pushable as={Segment} style={{ minHeight: "100vh" }} onClick={() => this.props.onOpenProjectExplorerMenu(false)} >
+            <Sidebar.Pushable as={Segment} style={{ minHeight: "100vh", borderRadius: 0 }} onClick={() => this.props.onOpenProjectExplorerMenu(false)} >
                 <Sidebar
                     as={Menu}
                     animation='overlay'
+                    direction="top"
                     width='thin'
                     visible={this.props.open}
                     icon='labeled'
                     vertical
                     inverted
                 >
+                    <Menu.Item
+                        name='workTimer'
+                        active={activeTab === "workTimer"}
+                        onClick={() => {
+                            this.props.onMenuClick("workTimer")
+                            this.props.onOpenProjectExplorerMenu(false)
+                        }}
+                    >
+                        <Icon name='time' />
+                        Stemplingsur
+                    </Menu.Item>
                     <Menu.Item
                         name='user'
                         active={activeTab === "user"}
@@ -26,7 +38,7 @@ export default class MySidebar extends Component {
                         }}
                     >
                         <Icon name='user' />
-                        Bruker
+                        {this.props.username}
                     </Menu.Item>
                     <Menu.Item
                         name='overview'

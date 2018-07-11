@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { getUsers, searchUser, addUser, removeUser } from '../APIish'
+import { getUsers, searchUser, addUser, removeUser, makeAdmin } from '../APIish'
 
-import { Header, Segment, Search, Button, Divider, List } from 'semantic-ui-react'
+import { Header, Segment, Search, Button, Divider, List, Dropdown } from 'semantic-ui-react'
 
 export default class Admin extends Component {
     constructor(props) {
@@ -24,6 +24,7 @@ export default class Admin extends Component {
 
     fetchUsers() {
         getUsers((res) => {
+            console.log(res.body)
             this.setState({ users: res.body })
         })
     }
@@ -87,6 +88,14 @@ export default class Admin extends Component {
         })
     }
 
+    makeAdmin = (username) => {
+        makeAdmin(username, (res) => {
+            if (res.text === "New admin") {
+                this.fetchUsers()
+            }
+        })
+    }
+
     render() {
         return (
             <div>
@@ -102,7 +111,24 @@ export default class Admin extends Component {
                                         <List.Item key={user.name} >
                                             <List.Content>
                                                 <List.Header>{user.name}</List.Header>
-                                                <List.Description><Button secondary onClick={() => this.removeUser(user.name)} >Fjern</Button></List.Description>
+                                                <List.Description>
+                                                    <Dropdown text='Valg'>
+                                                        <Dropdown.Menu>
+                                                            {!user.isAdmin &&
+                                                                <Dropdown.Item
+                                                                    icon='user plus'
+                                                                    text='Gjør til admin'
+                                                                    onClick={() => this.makeAdmin(user.name)}
+                                                                />
+                                                            }
+                                                            <Dropdown.Item
+                                                                icon='trash'
+                                                                text='Fjern'
+                                                                onClick={() => this.removeUser(user.name)}
+                                                            />
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </List.Description>
                                             </List.Content>
                                         </List.Item>
                                     )
