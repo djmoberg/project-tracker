@@ -66,7 +66,7 @@ export default class ProjectExplorer extends Component {
             case "admin":
                 return <Admin user={this.props.user} />
             case "workTimer":
-                return <WorkTimer />
+                return <WorkTimer updateOverview={this.updateOverview} />
             default:
                 break;
         }

@@ -5,7 +5,7 @@ import RegisterUser from './pages/RegisterUser'
 import ControlPanel from './pages/ControlPanel'
 import { isLoggedIn, logOut } from './APIish'
 
-import { Header, Segment, Loader, Dimmer, Button, Responsive, Grid, Image } from 'semantic-ui-react'
+import { Segment, Loader, Dimmer, Button, Responsive, Grid, Image } from 'semantic-ui-react'
 
 class App extends Component {
 	constructor(props) {
@@ -64,51 +64,52 @@ class App extends Component {
 			return <Login fetchIsLoggedIn={this.fetchIsLoggedIn} onShowRegisterChange={this.handleShowRegisterChange} />
 	}
 
-	render() {
+	renderContent() {
 		if (this.state.renderPage)
 			return (
-				<div>
-					<div style={{ backgroundColor: "black" }} >
-						<Grid columns="equal" padded >
-							<Grid.Row>
-								<Grid.Column>
-
-								</Grid.Column>
-								<Grid.Column textAlign="center" >
-									{/* <Header as="h1" textAlign="center" style={{ color: "white" }} >Project Tracker</Header> */}
-									<Image src="http://www.facelex.com/img/cooltext292638607517631.png" centered />
-								</Grid.Column>
-								<Grid.Column textAlign="right" >
-									<Responsive maxWidth={1000}>
-										<Button
-											size="big"
-											color="black"
-											icon="bars"
-											onClick={() => this.handleOpenProjectExplorerMenu(!this.state.openProjectExplorerMenu)}
-										/>
-									</Responsive>
-								</Grid.Column>
-							</Grid.Row>
-						</Grid>
-					</div>
-					<div className="App" >
-						{this.router()}
-					</div>
+				<div className="App" >
+					{this.router()}
 				</div>
 			)
 		else
 			return (
-				<div>
-					<Segment basic inverted textAlign="center" >
-						<Header as="h1">Project Tracker</Header>
-					</Segment>
-					<Segment style={{ marginTop: "50px" }} basic>
-						<Dimmer active inverted>
-							<Loader />
-						</Dimmer>
-					</Segment>
-				</div>
+				<Segment style={{ marginTop: "50px" }} basic>
+					<Dimmer active inverted>
+						<Loader indeterminate content="Venter på svar..." />
+					</Dimmer>
+				</Segment>
 			)
+	}
+
+	render() {
+		return (
+			<div>
+				<div style={{ backgroundColor: "black" }} >
+					<Grid columns="equal" padded >
+						<Grid.Row>
+							<Grid.Column>
+
+							</Grid.Column>
+							<Grid.Column textAlign="center" >
+								{/* <Header as="h1" textAlign="center" style={{ color: "white" }} >Project Tracker</Header> */}
+								<Image src="http://www.facelex.com/img/cooltext292638607517631.png" centered />
+							</Grid.Column>
+							<Grid.Column textAlign="right" >
+								<Responsive maxWidth={1000}>
+									<Button
+										size="big"
+										color="black"
+										icon="bars"
+										onClick={() => this.handleOpenProjectExplorerMenu(!this.state.openProjectExplorerMenu)}
+									/>
+								</Responsive>
+							</Grid.Column>
+						</Grid.Row>
+					</Grid>
+				</div>
+				{this.renderContent()}
+			</div>
+		)
 	}
 }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
-import { validComment, roundTime, calculateHours } from '../utils'
+import { validComment, roundTime, calculateHours, formatDate } from '../utils'
+import { getTimer, setTimer, addWork, deleteTimer } from '../APIish'
 
 import { Button, Modal, Header, TextArea, Form } from 'semantic-ui-react'
 
@@ -15,17 +16,35 @@ export default class WorkTimer extends Component {
             workDate: "",
             workFrom: "",
             workTo: "",
-            comment: ""
+            comment: "",
+            isValidComment: false,
+            commentError: false,
+            deletedStartTime: 0
+
         }
+    }
+
+    componentWillMount() {
+        getTimer((res) => {
+            if (res.body.startTime !== 0) {
+                this.setState({ startTime: res.body.startTime }, () => {
+                    this.timerID = setInterval(() => this.updateTime(), 500)
+                })
+            }
+        })
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID)
     }
 
-    clockIn = () => {
-        this.setState({ startTime: Date.now() }, () => {
-            this.timerID = setInterval(() => this.updateTime(), 500)
+    clockIn = (startTime) => {
+        setTimer(startTime, (res) => {
+            if (res.text === "Timer added") {
+                this.setState({ startTime: startTime, deletedStartTime: 0 }, () => {
+                    this.timerID = setInterval(() => this.updateTime(), 500)
+                })
+            }
         })
     }
 
@@ -34,10 +53,19 @@ export default class WorkTimer extends Component {
         let startTime = new Date(this.state.startTime)
         let nowTime = new Date()
         this.setState({
-            workDate: startTime.toLocaleDateString(),
+            workDate: startTime.toISOString(),
             workFrom: roundTime(startTime),
             workTo: roundTime(nowTime),
             modalOpen: true
+        })
+    }
+
+    cancelTimer = () => {
+        deleteTimer((res) => {
+            clearInterval(this.timerID)
+            this.setState({ deletedStartTime: this.state.startTime }, () => {
+                this.setState({ startTime: 0, time: "00:00:00" })
+            })
         })
     }
 
@@ -60,27 +88,50 @@ export default class WorkTimer extends Component {
         if (this.state.startTime === 0)
             return (
                 <div>
-                    <Button primary size="massive" onClick={this.clockIn} >Stemple inn</Button>
+                    {this.state.deletedStartTime !== 0 &&
+                        <Button secondary size="massive" onClick={() => this.clockIn(this.state.deletedStartTime)} >Gjenopprett</Button>
+                    }
+                    <Button primary size="massive" onClick={() => this.clockIn(Date.now())} >Stemple inn</Button>
                 </div>
             )
         else
             return (
                 <div>
-                    <p>Du begynte å arbeide: {new Date(this.state.startTime).toLocaleString()}</p>
-                    <p>Arbeidstid: {this.state.time}</p>
-                    <Button primary size="massive" onClick={this.clockOut} >Stemple ut</Button>
+                    <div style={{ marginBottom: "64px" }} >
+                        <Header
+                            as="h3"
+                            icon="calendar alternate"
+                            content="Du begynte å arbeide"
+                            subheader={new Date(this.state.startTime).toLocaleString()}
+                        />
+                        <Header
+                            as="h3"
+                            icon="clock"
+                            content="Arbeidstid"
+                            subheader={this.state.time}
+                        />
+                    </div>
+                    <Button.Group size="big" >
+                        <Button negative onClick={this.cancelTimer} >Avbryt</Button>
+                        <Button.Or text="||" />
+                        <Button primary onClick={this.clockOut} >Stemple ut</Button>
+                    </Button.Group>
+                    {/* <Button primary size="massive" onClick={this.clockOut} >Stemple ut</Button> */}
 
                     <Modal
                         closeIcon
                         open={this.state.modalOpen}
-                        onClose={() => this.setState({ modalOpen: false, startTime: 0, time: "00:00:00" })}
+                        onClose={() => {
+                            this.setState({ modalOpen: false })
+                            this.timerID = setInterval(() => this.updateTime(), 500)
+                        }}
                     >
                         <Header icon="clock" content="Stemple ut" />
                         <Modal.Content>
                             <Form>
                                 <Form.Field>
                                     <label>Dato</label>
-                                    <p>{this.state.workDate}</p>
+                                    <p>{new Date(this.state.workDate).toLocaleDateString()}</p>
                                 </Form.Field>
                                 <Form.Field>
                                     <label>Fra</label>
@@ -105,11 +156,39 @@ export default class WorkTimer extends Component {
                                 </Form.Field>
                             </Form>
                         </Modal.Content>
-                        {/* <Modal.Actions>
-                        <Button color="red" onClick={() => this.setState({ modalOpen: false })} >
-                            <Icon name="remove" /> Lukk
-                        </Button>
-                    </Modal.Actions> */}
+                        <Modal.Actions>
+                            <Button
+                                negative
+                                onClick={() => {
+                                    this.setState({ modalOpen: false })
+                                    this.timerID = setInterval(() => this.updateTime(), 500)
+                                }}
+                                content="Avbryt"
+                            >
+                            </Button>
+                            <Button
+                                positive
+                                onClick={() => {
+                                    addWork({
+                                        workDate: formatDate(this.state.workDate),
+                                        workFrom: this.state.workFrom,
+                                        workTo: this.state.workTo,
+                                        comment: this.state.comment
+                                    }, (res) => {
+                                        if (res.body.status === "Work added") {
+                                            deleteTimer((res2) => {
+                                                this.props.updateOverview(res.body.overview)
+                                                this.setState({ modalOpen: false, startTime: 0, time: "00:00:00" })
+                                            })
+                                        }
+                                    })
+                                }}
+                                disabled={!this.state.isValidComment}
+                                icon="checkmark"
+                                labelPosition="right"
+                                content="Lagre"
+                            />
+                        </Modal.Actions>
                     </Modal>
                 </div>
             )

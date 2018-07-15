@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { registerUser, isUsernameValid } from '../APIish'
 
-import { Form, Message, Button, Header } from 'semantic-ui-react'
+import { Form, Message, Button, Header, Segment } from 'semantic-ui-react'
 
 //TODO
 //Feilmeldinger
@@ -30,7 +30,8 @@ export default class RegisterUser extends Component {
     registerUser() {
         registerUser({
             username: this.state.username,
-            password: this.state.password
+            password: this.state.password,
+            email: this.state.email
         }, (res) => {
             this.setState({ password: "" })
             if (res.text === "User added")
@@ -75,7 +76,7 @@ export default class RegisterUser extends Component {
 
     render() {
         return (
-            <div style={{ maxWidth: "300px", margin: "0 auto" }} >
+            <Segment basic style={{ maxWidth: "300px", margin: "0 auto" }} >
                 <Header as="h2" style={{ textAlign: "center" }} >Registrer</Header>
                 <Form error={this.state.error} >
                     <Form.Input
@@ -163,7 +164,7 @@ export default class RegisterUser extends Component {
                         </Button>
                     </Form.Field>
                 </Form>
-            </div>
+            </Segment>
         )
     }
 }

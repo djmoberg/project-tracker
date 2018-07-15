@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Add from './userOptions/Add'
 import UserOverview from './userOptions/UserOverview'
+import Settings from './userOptions/Settings'
 
 import { Menu, Header, Segment } from 'semantic-ui-react'
 
@@ -55,6 +56,12 @@ export default class User extends Component {
 
                 {this.state.activeTab === "userOverview" &&
                     <UserOverview overview={this.props.overview} username={this.props.user.username} updateOverview={this.props.updateOverview} />
+                }
+
+                {this.state.activeTab === "settings" &&
+                    <Segment attached='bottom' >
+                        <Settings />
+                    </Segment>
                 }
 
             </div>

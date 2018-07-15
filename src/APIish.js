@@ -40,7 +40,8 @@ export function registerUser(data, callback) {
     request.post(process.env.REACT_APP_BACKEND + "user/register")
         .send({
             username: data.username,
-            password: data.password
+            password: data.password,
+            email: data.email
         })
         .then((res) => {
             callback(res)
@@ -168,6 +169,56 @@ export function addWork(work, callback) {
             comment: work.comment
         })
         .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+//WorkTimer.js
+export function getTimer(callback) {
+    request
+        .get(process.env.REACT_APP_BACKEND + "workTimer")
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function setTimer(startTime, callback) {
+    request
+        .post(process.env.REACT_APP_BACKEND + "workTimer/new")
+        .send({ startTime: startTime })
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function deleteTimer(callback) {
+    request
+        .delete(process.env.REACT_APP_BACKEND + "workTimer")
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+//Settings.js
+export function newPassword(password, callback) {
+    request
+        .put(process.env.REACT_APP_BACKEND + "user/newPassword")
+        .send({ newPassword: password })
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+//ForgotPassword.js
+export function sendNewPassword(email, callback) {
+    request
+        .post(process.env.REACT_APP_BACKEND + "user/sendNewPassword")
+        .send({ email: email })
         .then((res) => {
             callback(res)
         })

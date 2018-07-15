@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
 import { login } from '../APIish'
+import ForgotPassword from './ForgotPassword'
 
-import { Form, Message, Button, Header } from 'semantic-ui-react'
+import { Form, Message, Button, Header, Segment, Label } from 'semantic-ui-react'
 
 export default class Login extends Component {
     constructor(props) {
@@ -12,7 +13,8 @@ export default class Login extends Component {
             name: "",
             password: "",
             error: false,
-            loading: false
+            loading: false,
+            forgotPassword: false
         }
     }
 
@@ -32,50 +34,65 @@ export default class Login extends Component {
         })
     }
 
+    handleForgotPasswordChange = (value) => {
+        this.setState({ forgotPassword: value })
+    }
+
     render() {
-        return (
-            <div style={{ maxWidth: "300px", margin: "0 auto" }} >
-                <Header as="h2" style={{ textAlign: "center" }} >Logg inn</Header>
-                <Form error={this.state.error} loading={this.state.loading} >
-                    <Form.Input
-                        type="text"
-                        label="Brukernavn"
-                        placeholder="Brukernavn"
-                        value={this.state.name}
-                        onChange={(_, { value }) => this.setState({ name: value })}
-                        onFocus={() => this.setState({ error: false })}
-                    />
-                    <Form.Input
-                        type="password"
-                        label="Passord"
-                        placeholder="Passord"
-                        value={this.state.password}
-                        onChange={(_, { value }) => this.setState({ password: value })}
-                        onFocus={() => this.setState({ error: false })}
-                    />
-                    <Message
-                        error
-                        // header="Feil"
-                        content="Feil brukernavn eller passord"
-                    />
-                    <Form.Field>
-                        <Button
-                            primary
-                            disabled={this.state.name.length === 0 || this.state.password.length === 0}
-                            onClick={() => this.checkLoginInformation()}
-                        >
-                            Logg inn
-                        </Button>
-                        <Button
-                            secondary
-                            floated="right"
-                            onClick={() => this.props.onShowRegisterChange(true)}
-                        >
-                            Registrer
-                        </Button>
-                    </Form.Field>
-                </Form>
-            </div>
-        )
+        if (this.state.forgotPassword)
+            return <ForgotPassword onForgotPasswordChange={this.handleForgotPasswordChange} />
+        else
+            return (
+                <Segment basic style={{ maxWidth: "300px", margin: "0 auto" }} >
+                    <Header as="h2" style={{ textAlign: "center" }} >Logg inn</Header>
+                    <Form error={this.state.error} loading={this.state.loading} >
+                        <Form.Input
+                            type="text"
+                            label="Brukernavn"
+                            placeholder="Brukernavn"
+                            value={this.state.name}
+                            onChange={(_, { value }) => this.setState({ name: value })}
+                            onFocus={() => this.setState({ error: false })}
+                        />
+                        <Form.Input
+                            type="password"
+                            label="Passord"
+                            placeholder="Passord"
+                            value={this.state.password}
+                            onChange={(_, { value }) => this.setState({ password: value })}
+                            onFocus={() => this.setState({ error: false })}
+                        />
+                        <Form.Field>
+                            <Label as="a" onClick={() => this.handleForgotPasswordChange(true)} >
+                                Glemt Passord?
+                            </Label>
+                        </Form.Field>
+                        <Message
+                            error
+                            // header="Feil"
+                            content="Feil brukernavn eller passord"
+                        />
+                        <Form.Field>
+                            <Button
+                                secondary
+                                fluid
+                                onClick={() => this.props.onShowRegisterChange(true)}
+                            >
+                                Registrer
+                            </Button>
+                        </Form.Field>
+                        <Form.Field>
+                            <Button
+                                primary
+                                fluid
+                                disabled={this.state.name.length === 0 || this.state.password.length === 0}
+                                onClick={() => this.checkLoginInformation()}
+                            >
+                                Logg inn
+                            </Button>
+                        </Form.Field>
+                    </Form>
+                </Segment>
+            )
     }
 }
