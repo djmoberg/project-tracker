@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { getUsers, searchUser, addUser, removeUser, makeAdmin } from '../APIish'
+import { getUsers, searchUser, addUser, removeUser, makeAdmin, deleteProject } from '../APIish'
 
-import { Header, Segment, Search, Button, Divider, List, Dropdown } from 'semantic-ui-react'
+import { Header, Segment, Search, Button, Divider, List, Dropdown, Modal, Form } from 'semantic-ui-react'
 
 export default class Admin extends Component {
     constructor(props) {
@@ -14,7 +14,9 @@ export default class Admin extends Component {
             results: [],
             value: "",
             buttonDisabled: true,
-            removedUsername: ""
+            removedUsername: "",
+            modalOpen: false,
+            projectName: ""
         }
     }
 
@@ -208,7 +210,51 @@ export default class Admin extends Component {
                 <Segment>
                     <Header as="h4" >Slett Prosjekt</Header>
                     <Divider />
-                    <Button color="red" >Slett</Button>
+                    <Button
+                        color="red"
+                        onClick={() => {
+                            this.setState({ modalOpen: true })
+                        }}
+                    >
+                        Slett
+                    </Button>
+                    <Modal open={this.state.modalOpen} onClose={() => this.setState({ modalOpen: false })}>
+                        <Modal.Header>Slett Prosjekt</Modal.Header>
+                        <Modal.Content>
+                            <p>Prosjektet vil bli slettet <b>permanent</b></p>
+                            <p>Er du sikker på at du vil slette prosjektet?</p>
+                            <Form>
+                                <Form.Input
+                                    type="text"
+                                    label={"Skriv navnet på prosjektet (" + this.props.projectName + ") før du kan slette"}
+                                    value={this.state.projectName}
+                                    onChange={(_, { value }) => this.setState({ projectName: value })}
+                                />
+                            </Form>
+                        </Modal.Content>
+                        <Modal.Actions>
+                            <Button
+                                negative
+                                content="Nei"
+                                onClick={() => this.setState({ modalOpen: false })}
+                            />
+                            <Button
+                                positive
+                                icon="checkmark"
+                                labelPosition="right"
+                                content="Ja"
+                                disabled={this.state.projectName !== this.props.projectName}
+                                onClick={() => {
+                                    deleteProject((res) => {
+                                        if (res.text === "Project deleted") {
+                                            this.setState({ modalOpen: false })
+                                            this.props.onDeleteProject()
+                                        }
+                                    })
+                                }}
+                            />
+                        </Modal.Actions>
+                    </Modal>
                 </Segment>
             </div>
         )

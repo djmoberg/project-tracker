@@ -64,7 +64,7 @@ export default class ProjectExplorer extends Component {
             case "overview":
                 return <Overview overview={this.state.project.overview} />
             case "admin":
-                return <Admin user={this.props.user} />
+                return <Admin user={this.props.user} projectName={this.state.project.name} onDeleteProject={this.props.onChangeProjectClick} />
             case "workTimer":
                 return <WorkTimer updateOverview={this.updateOverview} />
             default:

@@ -51,9 +51,9 @@ export default class RegisterUser extends Component {
     render() {
         if (this.state.currentView !== "projectExplorer")
             return (
-                <div>
+                <div style={{ maxWidth: "1000px", margin: "0 auto" }} >
                     <ControlPanelMenu logOut={this.props.logOut} activeTab={this.state.currentView} onMenuClick={this.handleMenuClick} />
-                    <Segment>
+                    <Segment attached="bottom" >
                         {this.router()}
                     </Segment>
                 </div>

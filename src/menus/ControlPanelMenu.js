@@ -8,7 +8,7 @@ export default class ControlPanelMenu extends Component {
 
         return (
             <div>
-                <Menu pointing secondary stackable>
+                <Menu attached="top" tabular stackable>
                     <Menu.Item
                         name='Velg Prosjekt'
                         active={activeTab === "chooseProject"}
@@ -21,7 +21,7 @@ export default class ControlPanelMenu extends Component {
                     />
                     <Menu.Item
                         disabled
-                        name='Bli Med'
+                        name='Finn Prosjekt'
                         active={activeTab === "joinProject"}
                         onClick={() => this.props.onMenuClick("joinProject")}
                     />

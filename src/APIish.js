@@ -134,6 +134,15 @@ export function makeAdmin(username, callback) {
         })
 }
 
+export function deleteProject(callback) {
+    request
+        .delete(process.env.REACT_APP_BACKEND + "project")
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
 //UserOverview.js
 export function deleteWork(id, callback) {
     request.delete(process.env.REACT_APP_BACKEND + "work/delete")
