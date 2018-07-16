@@ -144,6 +144,22 @@ export function deleteWork(id, callback) {
         })
 }
 
+export function trashWork(work, callback) {
+    request
+        .post(process.env.REACT_APP_BACKEND + "work/trash")
+        .send({
+            id: work.id,
+            workDate: work.workDate,
+            workFrom: work.workFrom,
+            workTo: work.workTo,
+            comment: work.comment
+        })
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
 //Add.js
 export function editWork(work, callback) {
     request.put(process.env.REACT_APP_BACKEND + "work/edit")
@@ -166,8 +182,18 @@ export function addWork(work, callback) {
             workDate: work.workDate,
             workFrom: work.workFrom,
             workTo: work.workTo,
-            comment: work.comment
+            comment: work.comment,
+            addedUsers: work.addedUsers
         })
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function getAllUsers(callback) {
+    request
+        .get(process.env.REACT_APP_BACKEND + "project/allUsers")
         .withCredentials()
         .then((res) => {
             callback(res)
@@ -208,6 +234,25 @@ export function newPassword(password, callback) {
     request
         .put(process.env.REACT_APP_BACKEND + "user/newPassword")
         .send({ newPassword: password })
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function getDeletedWork(callback) {
+    request
+        .get(process.env.REACT_APP_BACKEND + "work/deleted")
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function deleteTrash(id, callback) {
+    request
+        .delete(process.env.REACT_APP_BACKEND + "work/trash")
+        .send({ id: id })
         .withCredentials()
         .then((res) => {
             callback(res)

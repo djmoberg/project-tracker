@@ -24,7 +24,6 @@ export default class Admin extends Component {
 
     fetchUsers() {
         getUsers((res) => {
-            console.log(res.body)
             this.setState({ users: res.body })
         })
     }
@@ -201,6 +200,10 @@ export default class Admin extends Component {
                             </Button>
                         </List.Item>
                     </List>
+                </Segment>
+                <Segment>
+                    <Header as="h4" >Forespørsler om å bli med i prosjektet</Header>
+                    <Divider />
                 </Segment>
                 <Segment>
                     <Header as="h4" >Slett Prosjekt</Header>

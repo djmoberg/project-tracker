@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Add from './Add'
 import { calculateHours, limitTo, uniqueYearList, getMonths } from '../../utils'
-import { deleteWork } from '../../APIish'
+import { deleteWork, trashWork } from '../../APIish'
 
 import { Segment, Header, Form, Dropdown, Table, Modal, Button } from 'semantic-ui-react'
 
@@ -131,11 +131,14 @@ export default class UserOverview extends Component {
                                                 this.openEdit(overview)
                                             }} />
                                             <Button icon="delete" onClick={() => {
-                                                deleteWork(overview.id, (res) => {
-                                                    if (res.body.status === "Work deleted") {
-                                                        this.props.updateOverview(res.body.overview)
-                                                        this.setOverview()
-                                                    }
+                                                trashWork(overview, (res) => {
+                                                    if (res.text === "Work moved")
+                                                        deleteWork(overview.id, (res) => {
+                                                            if (res.body.status === "Work deleted") {
+                                                                this.props.updateOverview(res.body.overview)
+                                                                this.setOverview()
+                                                            }
+                                                        })
                                                 })
                                             }} />
                                         </Button.Group>

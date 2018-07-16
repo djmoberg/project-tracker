@@ -30,11 +30,13 @@ export default class RegisterUser extends Component {
 
     handleProjectSelected = (value) => {
         this.setState({ currentView: "projectExplorer", selectedProject: value })
+        this.props.onShowProjectExplorerMenuChange(true)
     }
 
     handleChangeProjectClick = () => {
         localStorage.removeItem("selectedProject")
         this.setState({ currentView: "chooseProject", selectedProject: 0 })
+        this.props.onShowProjectExplorerMenuChange(false)
     }
 
     router() {

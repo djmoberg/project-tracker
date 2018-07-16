@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
 import { hourOptions, minuteOptions, validDate, validFromTo, validComment, getHoursMinutes, hourNow } from '../../utils'
-import { editWork, addWork } from '../../APIish'
+import { editWork, addWork, getAllUsers } from '../../APIish'
 
-import { Form, Dropdown, TextArea, Header, Label, Message, Accordion } from 'semantic-ui-react'
+import { Form, Dropdown, TextArea, Header, Label, Message } from 'semantic-ui-react'
 
 export default class Add extends Component {
     constructor(props) {
@@ -24,8 +24,17 @@ export default class Add extends Component {
             selectedFromMinute: "00",
             selectedToHour: hourNow(),
             selectedToMinute: "15",
-            workAdded: false
+            workAdded: false,
+            allUsers: [],
+            addedUsers: []
         }
+    }
+
+    componentWillMount() {
+        if (this.props.mode === "add")
+            getAllUsers((res) => {
+                this.setState({ allUsers: res.body })
+            })
     }
 
     componentDidMount() {
@@ -104,19 +113,14 @@ export default class Add extends Component {
         )
     }
 
-    // panels = [
-    //     {
-    //         title: 'Legg til personer på samme arbeid',
-    //         content: {
-    //             content: (
-    //                 <div>
-    //                     <Form.Checkbox label={"Test"} />
-    //                     <Form.Checkbox label={"Test2"} />
-    //                 </div>
-    //             )
-    //         },
-    //     },
-    // ]
+    getUserOptions() {
+        return this.state.allUsers.reduce((acc, user) => {
+            if (user.name !== this.props.username)
+                acc.push({ key: user.id, value: user.id, text: user.name })
+
+            return acc
+        }, [])
+    }
 
     render() {
         return (
@@ -227,7 +231,17 @@ export default class Add extends Component {
                             }}
                         />
                     </Form.Field>
-                    <Accordion as={Form.Field} panels={this.panels} />
+                    {this.props.mode === "add" &&
+                        <Form.Dropdown
+                            label="Legg til personer på samme arbeid"
+                            multiple
+                            search
+                            selection
+                            options={this.getUserOptions()}
+                            value={this.state.addedUsers}
+                            onChange={(_, { value }) => this.setState({ addedUsers: value })}
+                        />
+                    }
                     <Message
                         success
                         header='Arbeid lagt til!'
@@ -241,7 +255,8 @@ export default class Add extends Component {
                                 workDate: this.state.workDate,
                                 workFrom: this.state.workFrom,
                                 workTo: this.state.workTo,
-                                comment: this.state.comment
+                                comment: this.state.comment,
+                                addedUsers: this.state.addedUsers
                             }, (res) => {
                                 if (res.body.status === "Work added") {
                                     this.props.updateOverview(res.body.overview)

@@ -50,7 +50,7 @@ export default class User extends Component {
 
                 {this.state.activeTab === "add" &&
                     <Segment attached='bottom' >
-                        <Add mode="add" header="Legg til arbeid" updateOverview={this.props.updateOverview} />
+                        <Add mode="add" header="Legg til arbeid" updateOverview={this.props.updateOverview} username={this.props.user.username} />
                     </Segment>
                 }
 
@@ -60,7 +60,7 @@ export default class User extends Component {
 
                 {this.state.activeTab === "settings" &&
                     <Segment attached='bottom' >
-                        <Settings />
+                        <Settings updateOverview={this.props.updateOverview} />
                     </Segment>
                 }
 

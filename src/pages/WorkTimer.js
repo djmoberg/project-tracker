@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { validComment, roundTime, calculateHours, formatDate } from '../utils'
 import { getTimer, setTimer, addWork, deleteTimer } from '../APIish'
 
-import { Button, Modal, Header, TextArea, Form } from 'semantic-ui-react'
+import { Button, Modal, Header, TextArea, Form, Message } from 'semantic-ui-react'
 
 export default class WorkTimer extends Component {
     constructor(props) {
@@ -19,8 +19,8 @@ export default class WorkTimer extends Component {
             comment: "",
             isValidComment: false,
             commentError: false,
-            deletedStartTime: 0
-
+            deletedStartTime: 0,
+            clockOutWarning: false
         }
     }
 
@@ -49,15 +49,22 @@ export default class WorkTimer extends Component {
     }
 
     clockOut = () => {
-        clearInterval(this.timerID)
         let startTime = new Date(this.state.startTime)
         let nowTime = new Date()
-        this.setState({
-            workDate: startTime.toISOString(),
-            workFrom: roundTime(startTime),
-            workTo: roundTime(nowTime),
-            modalOpen: true
-        })
+        let workFrom = roundTime(startTime)
+        let workTo = roundTime(nowTime)
+
+        if (calculateHours(workFrom, workTo) > 0) {
+            clearInterval(this.timerID)
+            this.setState({
+                workDate: startTime.toISOString(),
+                workFrom: workFrom,
+                workTo: workTo,
+                modalOpen: true
+            })
+        } else {
+            this.setState({ clockOutWarning: true })
+        }
     }
 
     cancelTimer = () => {
@@ -117,6 +124,13 @@ export default class WorkTimer extends Component {
                         <Button primary onClick={this.clockOut} >Stemple ut</Button>
                     </Button.Group>
                     {/* <Button primary size="massive" onClick={this.clockOut} >Stemple ut</Button> */}
+
+                    {this.state.clockOutWarning &&
+                        <Message
+                            warning
+                            content="Du må jobbe minst 15 min for å kunne stemple ut"
+                        />
+                    }
 
                     <Modal
                         closeIcon

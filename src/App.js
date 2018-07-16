@@ -16,7 +16,8 @@ class App extends Component {
 			showRegister: false,
 			renderPage: false,
 			user: {},
-			openProjectExplorerMenu: false
+			openProjectExplorerMenu: false,
+			showProjectExplorerMenu: false
 		}
 	}
 
@@ -44,6 +45,10 @@ class App extends Component {
 		this.setState({ showRegister: value })
 	}
 
+	handleShowProjectExplorerMenuChange = (value) => {
+		this.setState({ showProjectExplorerMenu: value })
+	}
+
 	handleOpenProjectExplorerMenu = (value) => {
 		this.setState({ openProjectExplorerMenu: value })
 	}
@@ -56,6 +61,7 @@ class App extends Component {
 					user={this.state.user}
 					openProjectExplorerMenu={this.state.openProjectExplorerMenu}
 					onOpenProjectExplorerMenu={this.handleOpenProjectExplorerMenu}
+					onShowProjectExplorerMenuChange={this.handleShowProjectExplorerMenuChange}
 				/>
 			)
 		else if (this.state.showRegister && !this.state.isLoggedIn)
@@ -95,14 +101,16 @@ class App extends Component {
 								<Image src="http://www.facelex.com/img/cooltext292638607517631.png" centered />
 							</Grid.Column>
 							<Grid.Column textAlign="right" >
-								<Responsive maxWidth={1000}>
-									<Button
-										size="big"
-										color="black"
-										icon="bars"
-										onClick={() => this.handleOpenProjectExplorerMenu(!this.state.openProjectExplorerMenu)}
-									/>
-								</Responsive>
+								{this.state.showProjectExplorerMenu &&
+									<Responsive maxWidth={1000}>
+										<Button
+											size="big"
+											color="black"
+											icon="bars"
+											onClick={() => this.handleOpenProjectExplorerMenu(!this.state.openProjectExplorerMenu)}
+										/>
+									</Responsive>
+								}
 							</Grid.Column>
 						</Grid.Row>
 					</Grid>

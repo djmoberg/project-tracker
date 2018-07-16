@@ -161,9 +161,12 @@ export function roundTime(time) {
     let m = t.getMinutes()
 
     if (m >= 53)
-        return (h + 1) + ":" + roundMinutes(m)
-    else
-        return h + ":" + roundMinutes(m)
+        h = h + 1
+
+    if (h <= 9)
+        h = "0" + h
+
+    return h + ":" + roundMinutes(m)
 }
 
 export function formatDate(date) {

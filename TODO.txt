@@ -1,0 +1,5 @@
+-     Angre ved sletting av arbeid                  (GOOD?)
+-     Stemplingsur: Sjekke om total tid er 0        (GOOD?)
+-     Bli med prosjekt
+-     Fjerne mobil meny App.js + ControlPanel.js    (GOOD?)
+-     Add.js: legge til flere om gangen             (GOOD?)
