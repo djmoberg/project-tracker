@@ -5,6 +5,7 @@ import ChooseProject from './ChooseProject'
 import RegisterProject from './RegisterProject'
 import JoinProject from './JoinProject'
 import ProjectExplorer from './ProjectExplorer'
+import { getProjects } from '../APIish'
 
 import { Segment } from 'semantic-ui-react'
 
@@ -14,7 +15,8 @@ export default class RegisterUser extends Component {
 
         this.state = {
             currentView: "chooseProject",
-            selectedProject: 0
+            selectedProject: 0,
+            projects: []
         }
     }
 
@@ -22,6 +24,20 @@ export default class RegisterUser extends Component {
         const selectedProject = localStorage.getItem('selectedProject')
         if (selectedProject)
             this.handleProjectSelected(selectedProject)
+        else
+            this.setProjects()
+    }
+
+    setProjects() {
+        getProjects((res) => {
+            let projects = []
+
+            res.body.forEach((project) => {
+                projects.push({ text: project.name, value: project.id })
+            })
+
+            this.setState({ projects })
+        })
     }
 
     handleMenuClick = (value) => {
@@ -37,15 +53,16 @@ export default class RegisterUser extends Component {
         localStorage.removeItem("selectedProject")
         this.setState({ currentView: "chooseProject", selectedProject: 0 })
         this.props.onShowProjectExplorerMenuChange(false)
+        this.setProjects()
     }
 
     router() {
         if (this.state.currentView === "chooseProject")
-            return <ChooseProject onProjectSelected={this.handleProjectSelected} />
+            return <ChooseProject onProjectSelected={this.handleProjectSelected} projects={this.state.projects} />
         else if (this.state.currentView === "registerProject")
             return <RegisterProject onRegistered={this.handleMenuClick} />
         else if (this.state.currentView === "joinProject")
-            return <JoinProject />
+            return <JoinProject projects={this.state.projects} />
     }
 
     render() {

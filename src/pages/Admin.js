@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { getUsers, searchUser, addUser, removeUser, makeAdmin, deleteProject } from '../APIish'
+import { getUsers, searchUser, addUser, removeUser, makeAdmin, deleteProject, getJoinRequests, deleteJoinRequest } from '../APIish'
 
-import { Header, Segment, Search, Button, Divider, List, Dropdown, Modal, Form } from 'semantic-ui-react'
+import { Header, Segment, Search, Button, Divider, List, Dropdown, Modal, Form, Label } from 'semantic-ui-react'
 
 export default class Admin extends Component {
     constructor(props) {
@@ -16,17 +16,25 @@ export default class Admin extends Component {
             buttonDisabled: true,
             removedUsername: "",
             modalOpen: false,
-            projectName: ""
+            projectName: "",
+            joinRequests: []
         }
     }
 
     componentDidMount() {
         this.fetchUsers()
+        this.fetchJoinRequests()
     }
 
     fetchUsers() {
         getUsers((res) => {
             this.setState({ users: res.body })
+        })
+    }
+
+    fetchJoinRequests() {
+        getJoinRequests((res) => {
+            this.setState({ joinRequests: res.body })
         })
     }
 
@@ -206,6 +214,38 @@ export default class Admin extends Component {
                 <Segment>
                     <Header as="h4" >Forespørsler om å bli med i prosjektet</Header>
                     <Divider />
+                    <List divided >
+                        {this.state.joinRequests.map(user =>
+                            <List.Item key={user.name} >
+                                <Label basic horizontal size="big" >{user.name}</Label>
+                                <Button.Group size="large" >
+                                    <Button
+                                        negative
+                                        content="Avslå"
+                                        onClick={() => {
+                                            deleteJoinRequest(user.id, (res) => {
+                                                this.fetchJoinRequests()
+                                            })
+                                        }}
+                                    />
+                                    <Button.Or text="||" />
+                                    <Button
+                                        positive
+                                        content="Godta"
+                                        onClick={() => {
+                                            addUser(user.name, (res) => {
+                                                if (res.text === "User added")
+                                                    deleteJoinRequest(user.id, (res) => {
+                                                        this.fetchJoinRequests()
+                                                        this.fetchUsers()
+                                                    })
+                                            })
+                                        }}
+                                    />
+                                </Button.Group>
+                            </List.Item>
+                        )}
+                    </List>
                 </Segment>
                 <Segment>
                     <Header as="h4" >Slett Prosjekt</Header>

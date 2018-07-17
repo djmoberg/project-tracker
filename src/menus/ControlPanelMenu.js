@@ -20,7 +20,6 @@ export default class ControlPanelMenu extends Component {
                         onClick={() => this.props.onMenuClick("registerProject")}
                     />
                     <Menu.Item
-                        disabled
                         name='Finn Prosjekt'
                         active={activeTab === "joinProject"}
                         onClick={() => this.props.onMenuClick("joinProject")}

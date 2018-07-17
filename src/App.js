@@ -98,7 +98,7 @@ class App extends Component {
 							</Grid.Column>
 							<Grid.Column textAlign="center" >
 								{/* <Header as="h1" textAlign="center" style={{ color: "white" }} >Project Tracker</Header> */}
-								<Image src="http://www.facelex.com/img/cooltext292638607517631.png" centered />
+								<Image src="https://facelex.com/img/cooltext292638607517631.png" centered />
 							</Grid.Column>
 							<Grid.Column textAlign="right" >
 								{this.state.showProjectExplorerMenu &&

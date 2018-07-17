@@ -75,6 +75,26 @@ export function registerProject(name, callback) {
         })
 }
 
+//JoinProject.js
+export function searchProject(value, callback) {
+    request
+        .get(process.env.REACT_APP_BACKEND + "projects/find/" + value)
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function sendJoinRequest(projectId, callback) {
+    request
+        .post(process.env.REACT_APP_BACKEND + "projects/joinRequest")
+        .send({ projectId: projectId })
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
 //ChooseProject.js
 export function getProjects(callback) {
     request
@@ -137,6 +157,25 @@ export function makeAdmin(username, callback) {
 export function deleteProject(callback) {
     request
         .delete(process.env.REACT_APP_BACKEND + "project")
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function getJoinRequests(callback) {
+    request
+        .get(process.env.REACT_APP_BACKEND + "project/joinRequests")
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function deleteJoinRequest(userId, callback) {
+    request
+        .delete(process.env.REACT_APP_BACKEND + "project/joinRequests")
+        .send({ userId: userId })
         .withCredentials()
         .then((res) => {
             callback(res)
