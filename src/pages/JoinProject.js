@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { searchProject, sendJoinRequest } from '../APIish'
+import { searchProject, sendJoinRequest, getPendingJoinRequests, deletePendingJoinRequests } from '../APIish'
 
-import { Form, Search, Button, Header, Message } from 'semantic-ui-react'
+import { Form, Search, Button, Header, Message, Divider, List } from 'semantic-ui-react'
 
 // const request = require('superagent');
 
@@ -16,8 +16,19 @@ export default class RegisterProject extends Component {
             value: "",
             selectedProject: 0,
             buttonDisabled: true,
-            success: false
+            success: false,
+            pendingJoinRequests: []
         }
+    }
+
+    componentWillMount() {
+        this.fetchPendingJoinRequests()
+    }
+
+    fetchPendingJoinRequests() {
+        getPendingJoinRequests((res) => {
+            this.setState({ pendingJoinRequests: res.body })
+        })
     }
 
     handleResultSelect = (e, { result }) => {
@@ -30,10 +41,10 @@ export default class RegisterProject extends Component {
                 this.setState({ isLoading: true, value }, () => {
                     searchProject(value, (res) => {
                         let results = res.body.reduce((result, project) => {
-                            if (project.name === value && !this.props.projects.some((project2) => { return project2.text === project.name })) {
+                            if (project.name === value && !this.props.projects.some((project2) => { return project2.text === project.name }) && !this.state.pendingJoinRequests.some((pjr) => {return pjr.name === project.name})) {
                                 this.setState({ buttonDisabled: false, selectedProject: project.id })
                             }
-                            if (!this.props.projects.some((project2) => { return project2.text === project.name }))
+                            if (!this.props.projects.some((project2) => { return project2.text === project.name }) && !this.state.pendingJoinRequests.some((pjr) => {return pjr.name === project.name}))
                                 result.push({
                                     title: project.name,
                                     description: "Beskrivelse av prosjektet",
@@ -76,8 +87,10 @@ export default class RegisterProject extends Component {
                             disabled={this.state.buttonDisabled}
                             onClick={() => {
                                 sendJoinRequest(this.state.selectedProject, (res) => {
-                                    if (res.text === "Request sent")
+                                    if (res.text === "Request sent") {
                                         this.setState({ success: true, value: "", results: [], buttonDisabled: true })
+                                        this.fetchPendingJoinRequests()
+                                    }
                                 })
                             }}
                         >
@@ -89,6 +102,30 @@ export default class RegisterProject extends Component {
                         content="Forespørselen din er blitt sendt!"
                     />
                 </Form>
+                {this.state.pendingJoinRequests.length !== 0 &&
+                    <div>
+                        <Divider />
+                        <Header as="h2" style={{ textAlign: "center" }} >Forespørsler</Header>
+                        <List>
+                            {this.state.pendingJoinRequests.map(project =>
+                                <List.Item key={project.id} >
+                                    {project.name}
+                                    <List.Content floated='right'>
+                                        <Button
+                                            negative
+                                            content="Fjern"
+                                            onClick={() => {
+                                                deletePendingJoinRequests(project.id, (res) => {
+                                                    this.fetchPendingJoinRequests()
+                                                })
+                                            }}
+                                        />
+                                    </List.Content>
+                                </List.Item>
+                            )}
+                        </List>
+                    </div>
+                }
             </div>
         )
     }

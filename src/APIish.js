@@ -95,6 +95,25 @@ export function sendJoinRequest(projectId, callback) {
         })
 }
 
+export function getPendingJoinRequests(callback) {
+    request
+        .get(process.env.REACT_APP_BACKEND + "user/pendingJoinRequests")
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function deletePendingJoinRequests(projectId, callback) {
+    request
+        .delete(process.env.REACT_APP_BACKEND + "user/pendingJoinRequest")
+        .send({ projectId: projectId })
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
 //ChooseProject.js
 export function getProjects(callback) {
     request

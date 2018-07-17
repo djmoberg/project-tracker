@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { registerUser, isUsernameValid } from '../APIish'
+import { validEmail } from '../utils'
 
 import { Form, Message, Button, Header, Segment } from 'semantic-ui-react'
 
@@ -20,10 +21,12 @@ export default class RegisterUser extends Component {
             error: false,
             usernameIsValid: false,
             passwordIsValid: false,
-            emailIsValid: true, //endre
+            emailIsValid: false,
             loading: false,
             usernameInputIcon: " ",
-            passwordInputIcon: " "
+            passwordInputIcon: " ",
+            emailInputIcon: " ",
+            errorMsg: ""
         }
     }
 
@@ -135,17 +138,30 @@ export default class RegisterUser extends Component {
                         }}
                     />
                     <Form.Input
+                        required
+                        error={this.state.emailInputIcon === "warning sign red"}
+                        icon={this.state.emailInputIcon}
                         type="email"
                         label="Email"
                         placeholder=""
                         value={this.state.email}
-                        onChange={(_, { value }) => this.setState({ email: value })}
-                        onFocus={() => this.setState({ error: false })}
+                        onChange={(_, { value }) => this.setState({ email: value }, () => {
+                            let valid = validEmail(this.state.email)
+                            this.setState({ emailIsValid: valid })
+                            if (valid)
+                                this.setState({ emailInputIcon: "check green" })
+                            else
+                                this.setState({ emailInputIcon: " " })
+                        })}
+                        onFocus={() => this.setState({ error: false, emailInputIcon: " " })}
+                        onBlur={() => {
+                            if (!validEmail(this.state.email))
+                                this.setState({ emailInputIcon: "warning sign red" })
+                        }}
                     />
                     <Message
                         error
-                        // header="Feil"
-                        content="Feil brukernavn eller passord"
+                        content={this.state.errorMsg}
                     />
                     <Form.Field>
                         <Button

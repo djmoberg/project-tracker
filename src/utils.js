@@ -188,5 +188,5 @@ export function validPassword(pass) {
 }
 
 export function validEmail(email) {
-    return email.length >= 1
+    return email.length >= 1 && email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
 }

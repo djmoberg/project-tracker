@@ -1,6 +1,15 @@
--     Angre ved sletting av arbeid                  (GOOD?)
--     Stemplingsur: Sjekke om total tid er 0        (GOOD?)
--     Bli med prosjekt
--     Fjerne mobil meny App.js + ControlPanel.js    (GOOD?)
--     Add.js: legge til flere om gangen             (GOOD?)
--     Bilder
+-       Angre ved sletting av arbeid                    (GOOD?)
+-       Stemplingsur: Sjekke om total tid er 0          (GOOD?)
+-       Bli med prosjekt                                (GOOD?)
+-       Fjerne mobil meny App.js + ControlPanel.js      (GOOD?)
+-       Add.js: legge til flere om gangen               (GOOD?)
+
+-       Bilder
+-       Pending join requests                           (GOOD?)
+-       Ikke sende mer enn en request per prosjekt      (GOOD?)
+-       Legge til beskrivelse til prosjekt
+-       Prosjektinnstillinger: endre navn, endre beskrivelse
+-       Notifikasjon når ny bli med forespørsel
+-       Brukerinnstillinger: endre email, slette bruker
+-       isAdmin når nytt prosjekt(når brukeren ikke har oppdatert siden)
+-       Registrer validering
