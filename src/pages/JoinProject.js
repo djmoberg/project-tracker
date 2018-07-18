@@ -47,7 +47,7 @@ export default class RegisterProject extends Component {
                             if (!this.props.projects.some((project2) => { return project2.text === project.name }) && !this.state.pendingJoinRequests.some((pjr) => {return pjr.name === project.name}))
                                 result.push({
                                     title: project.name,
-                                    description: "Beskrivelse av prosjektet",
+                                    description: project.description,
                                     id: project.id,
                                     key: project.id
                                     // image: "https://s3.amazonaws.com/uifaces/faces/twitter/Stievius/128.jpg",

@@ -187,7 +187,8 @@ export default class WorkTimer extends Component {
                                         workDate: formatDate(this.state.workDate),
                                         workFrom: this.state.workFrom,
                                         workTo: this.state.workTo,
-                                        comment: this.state.comment
+                                        comment: this.state.comment,
+                                        addedUsers: []
                                     }, (res) => {
                                         if (res.body.status === "Work added") {
                                             deleteTimer((res2) => {

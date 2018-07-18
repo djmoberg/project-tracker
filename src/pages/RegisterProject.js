@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { registerProject } from '../APIish'
 
-import { Form, Message, Button, Header } from 'semantic-ui-react'
+import { Form, Button, Header } from 'semantic-ui-react'
 
 export default class RegisterProject extends Component {
     constructor(props) {
@@ -10,7 +10,7 @@ export default class RegisterProject extends Component {
 
         this.state = {
             name: "",
-            error: false
+            description: ""
         }
     }
 
@@ -18,7 +18,7 @@ export default class RegisterProject extends Component {
         return (
             <div style={{ maxWidth: "300px", margin: "0 auto" }} >
                 <Header as="h2" style={{ textAlign: "center" }} >Nytt Prosjekt</Header>
-                <Form error={this.state.error} >
+                <Form>
                     <Form.Input
                         required
                         type="text"
@@ -26,13 +26,13 @@ export default class RegisterProject extends Component {
                         placeholder="Navn"
                         value={this.state.name}
                         onChange={(_, { value }) => this.setState({ name: value })}
-                        onFocus={() => this.setState({ error: false })}
-                    //onBlur sjekk om det eksisterer
                     />
-                    <Message
-                        error
-                        // header="Feil"
-                        content="Feil brukernavn eller passord"
+                    <Form.TextArea
+                        label="Beskrivelse"
+                        placeholder="Beskrivelse"
+                        maxLength="255"
+                        value={this.state.description}
+                        onChange={(_, { value }) => this.setState({ description: value })}
                     />
                     <Form.Field>
                         <Button
@@ -40,10 +40,10 @@ export default class RegisterProject extends Component {
                             fluid
                             disabled={this.state.name.length === 0}
                             onClick={() => {
-                                registerProject(this.state.name, (res) => {
+                                registerProject(this.state.name, this.state.description, (res) => {
                                     this.setState({ name: "" })
-                                    if (res.text === "Project added")
-                                        this.props.onRegistered("chooseProject")
+                                    if (res.body.msg === "Project added")
+                                        this.props.onRegistered("chooseProject", res.body.projectId)
                                 })
                             }}
                         >

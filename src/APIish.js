@@ -66,9 +66,9 @@ export function getProject(projectId, callback) {
 }
 
 //RegisterProject.js
-export function registerProject(name, callback) {
+export function registerProject(name, description, callback) {
     request.post(process.env.REACT_APP_BACKEND + "project/register")
-        .send({ name: name })
+        .send({ name: name, description: description })
         .withCredentials()
         .then((res) => {
             callback(res)
@@ -195,6 +195,16 @@ export function deleteJoinRequest(userId, callback) {
     request
         .delete(process.env.REACT_APP_BACKEND + "project/joinRequests")
         .send({ userId: userId })
+        .withCredentials()
+        .then((res) => {
+            callback(res)
+        })
+}
+
+export function updateProject(newName, newDescription, callback) {
+    request
+        .put(process.env.REACT_APP_BACKEND + "project")
+        .send({ newName: newName, newDescription: newDescription })
         .withCredentials()
         .then((res) => {
             callback(res)

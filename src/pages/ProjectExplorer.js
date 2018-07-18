@@ -19,6 +19,7 @@ export default class ProjectExplorer extends Component {
             activeTab: "user",
             project: {
                 name: "",
+                description: "",
                 overview: []
             },
             isAdmin: false
@@ -26,7 +27,7 @@ export default class ProjectExplorer extends Component {
     }
 
     componentWillMount() {
-        this.fetchProject(this.props.selectedProject)
+        this.fetchProject()
     }
 
     componentDidMount() {
@@ -41,15 +42,15 @@ export default class ProjectExplorer extends Component {
         this.setState({ isAdmin })
     }
 
-    fetchProject(projectId) {
-        getProject(projectId, (res) => {
+    fetchProject = () => {
+        getProject(this.props.selectedProject, (res) => {
             this.setState({ project: res.body })
             localStorage.setItem('selectedProject', this.props.selectedProject)
         })
     }
 
     updateOverview = (overview) => {
-        this.setState({ project: { name: this.state.project.name, overview } })
+        this.setState({ project: { name: this.state.project.name, description: this.state.project.description, overview } })
     }
 
     handleMenuClick = (name) => {
@@ -64,7 +65,7 @@ export default class ProjectExplorer extends Component {
             case "overview":
                 return <Overview overview={this.state.project.overview} />
             case "admin":
-                return <Admin user={this.props.user} projectName={this.state.project.name} onDeleteProject={this.props.onChangeProjectClick} />
+                return <Admin user={this.props.user} project={this.state.project} onDeleteProject={this.props.onChangeProjectClick} fetchProject={this.fetchProject} />
             case "workTimer":
                 return <WorkTimer updateOverview={this.updateOverview} />
             default:
@@ -95,7 +96,10 @@ export default class ProjectExplorer extends Component {
                         isAdmin={this.state.isAdmin}
                         username={this.props.user.username}
                     >
-                        <Header as="h2" >Prosjekt: {this.state.project.name}</Header>
+                        <Header as="h2" >
+                            Prosjekt: {this.state.project.name}
+                            <Header.Subheader>{this.state.project.description}</Header.Subheader>
+                        </Header>
                         {/* <Segment> */}
                         {this.renderPage(this.state.activeTab)}
                         {/* </Segment> */}
@@ -112,7 +116,10 @@ export default class ProjectExplorer extends Component {
                         open={this.props.openProjectExplorerMenu}
                         onOpenProjectExplorerMenu={this.props.onOpenProjectExplorerMenu}
                     >
-                        <Header as="h2" >Prosjekt: {this.state.project.name}</Header>
+                        <Header as="h2" >
+                            Prosjekt: {this.state.project.name}
+                            <Header.Subheader>{this.state.project.description}</Header.Subheader>
+                        </Header>
                         {/* <Segment> */}
                         {this.renderPage(this.state.activeTab)}
                         {/* </Segment> */}

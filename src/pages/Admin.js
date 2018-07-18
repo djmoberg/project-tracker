@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { getUsers, searchUser, addUser, removeUser, makeAdmin, deleteProject, getJoinRequests, deleteJoinRequest } from '../APIish'
+import { getUsers, searchUser, addUser, removeUser, makeAdmin, deleteProject, getJoinRequests, deleteJoinRequest, updateProject } from '../APIish'
 
-import { Header, Segment, Search, Button, Divider, List, Dropdown, Modal, Form, Label } from 'semantic-ui-react'
+import { Header, Segment, Search, Button, Divider, List, Dropdown, Modal, Form, Label, Message } from 'semantic-ui-react'
 
 export default class Admin extends Component {
     constructor(props) {
@@ -17,7 +17,10 @@ export default class Admin extends Component {
             removedUsername: "",
             modalOpen: false,
             projectName: "",
-            joinRequests: []
+            joinRequests: [],
+            newProjectName: this.props.project.name,
+            newProjectDescription: this.props.project.description,
+            projectUpdated: false
         }
     }
 
@@ -248,6 +251,42 @@ export default class Admin extends Component {
                     </List>
                 </Segment>
                 <Segment>
+                    <Header as="h4" >Prosjektinnstillinger</Header>
+                    <Divider />
+                    <Form style={{ maxWidth: "400px" }} success={this.state.projectUpdated} >
+                        <Form.Input
+                            label="Navn"
+                            value={this.state.newProjectName}
+                            onChange={(_, { value }) => this.setState({ newProjectName: value })}
+                            onFocus={() => this.setState({ projectUpdated: false })}
+                        />
+                        <Form.TextArea
+                            label="Beskrivelse"
+                            maxLength="255"
+                            value={this.state.newProjectDescription}
+                            onChange={(_, { value }) => this.setState({ newProjectDescription: value })}
+                            onFocus={() => this.setState({ projectUpdated: false })}
+                        />
+                        <Form.Button
+                            positive
+                            content="Lagre"
+                            disabled={this.state.newProjectName.length === 0}
+                            onClick={() => {
+                                updateProject(this.state.newProjectName, this.state.newProjectDescription, (res) => {
+                                    if (res.text === "Project updated") {
+                                        this.setState({ projectUpdated: true })
+                                        this.props.fetchProject()
+                                    }
+                                })
+                            }}
+                        />
+                        <Message
+                            success
+                            content="Endringer lagret"
+                        />
+                    </Form>
+                </Segment>
+                <Segment>
                     <Header as="h4" >Slett Prosjekt</Header>
                     <Divider />
                     <Button
@@ -266,7 +305,7 @@ export default class Admin extends Component {
                             <Form>
                                 <Form.Input
                                     type="text"
-                                    label={"Skriv navnet på prosjektet (" + this.props.projectName + ") før du kan slette"}
+                                    label={"Skriv navnet på prosjektet (" + this.props.project.name + ") før du kan slette"}
                                     value={this.state.projectName}
                                     onChange={(_, { value }) => this.setState({ projectName: value })}
                                 />
@@ -283,7 +322,7 @@ export default class Admin extends Component {
                                 icon="checkmark"
                                 labelPosition="right"
                                 content="Ja"
-                                disabled={this.state.projectName !== this.props.projectName}
+                                disabled={this.state.projectName !== this.props.project.name}
                                 onClick={() => {
                                     deleteProject((res) => {
                                         if (res.text === "Project deleted") {

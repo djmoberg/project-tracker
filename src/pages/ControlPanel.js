@@ -9,14 +9,15 @@ import { getProjects } from '../APIish'
 
 import { Segment } from 'semantic-ui-react'
 
-export default class RegisterUser extends Component {
+export default class ControlPanel extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
             currentView: "chooseProject",
             selectedProject: 0,
-            projects: []
+            projects: [],
+            user: this.props.user
         }
     }
 
@@ -44,6 +45,13 @@ export default class RegisterUser extends Component {
         this.setState({ currentView: value })
     }
 
+    handleRegistered = (view, projectId) => {
+        let user = this.state.user
+        user.isAdmin.push(projectId)
+        this.setState({ currentView: view, user })
+        this.setProjects()
+    }
+
     handleProjectSelected = (value) => {
         this.setState({ currentView: "projectExplorer", selectedProject: value })
         this.props.onShowProjectExplorerMenuChange(true)
@@ -60,7 +68,7 @@ export default class RegisterUser extends Component {
         if (this.state.currentView === "chooseProject")
             return <ChooseProject onProjectSelected={this.handleProjectSelected} projects={this.state.projects} />
         else if (this.state.currentView === "registerProject")
-            return <RegisterProject onRegistered={this.handleMenuClick} />
+            return <RegisterProject onRegistered={this.handleRegistered} />
         else if (this.state.currentView === "joinProject")
             return <JoinProject projects={this.state.projects} />
     }
@@ -80,7 +88,7 @@ export default class RegisterUser extends Component {
                 <React.Fragment>
                     <ProjectExplorer
                         logOut={this.props.logOut}
-                        user={this.props.user}
+                        user={this.state.user}
                         selectedProject={this.state.selectedProject}
                         onChangeProjectClick={this.handleChangeProjectClick}
                         openProjectExplorerMenu={this.props.openProjectExplorerMenu}
