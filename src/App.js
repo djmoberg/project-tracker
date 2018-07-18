@@ -91,16 +91,16 @@ class App extends Component {
 		return (
 			<div>
 				<div style={{ backgroundColor: "black" }} >
-					<Grid columns="equal" padded >
+					<Grid padded >
 						<Grid.Row>
-							<Grid.Column>
+							<Grid.Column width="4" >
 
 							</Grid.Column>
-							<Grid.Column textAlign="center" >
+							<Grid.Column verticalAlign='middle' width="8" textAlign="center" >
 								{/* <Header as="h1" textAlign="center" style={{ color: "white" }} >Project Tracker</Header> */}
 								<Image src="https://facelex.com/img/cooltext292638607517631.png" centered />
 							</Grid.Column>
-							<Grid.Column textAlign="right" >
+							<Grid.Column width="4" textAlign="right" >
 								{this.state.showProjectExplorerMenu &&
 									<Responsive maxWidth={1000}>
 										<Button
