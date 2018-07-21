@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { hourOptions, minuteOptions, validDate, validFromTo, validComment, getHoursMinutes, hourNow } from '../../utils'
+import { hourOptions, minuteOptions, validDate, validFromTo, validComment, getHoursMinutes, hourNow, calculateHours } from '../../utils'
 import { editWork, addWork, getAllUsers } from '../../APIish'
 
 import { Form, Dropdown, TextArea, Header, Label, Message } from 'semantic-ui-react'
@@ -216,6 +216,12 @@ export default class Add extends Component {
                                 <Label color="red" pointing>
                                     Tid til må være etter tid fra!
                                 </Label>
+                            }
+                        </Form.Field>
+                        <Form.Field>
+                            <label>Timer</label>
+                            {calculateHours(this.state.workFrom, this.state.workTo) > 0 &&
+                                <p>{calculateHours(this.state.workFrom, this.state.workTo)}</p>
                             }
                         </Form.Field>
                     </Form.Group>

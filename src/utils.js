@@ -190,3 +190,13 @@ export function validPassword(pass) {
 export function validEmail(email) {
     return email.length >= 1 && email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
 }
+
+export function getTotalHours(overview) {
+    let totalHours = 0
+
+    for (let i = 0; i < overview.length; i++) {
+        totalHours += calculateHours(overview[i].workFrom, overview[i].workTo)
+    }
+
+    return totalHours
+}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import Add from './Add'
+import GeneratePdf from '../GeneratePdf'
 import { calculateHours, limitTo, uniqueYearList, getMonths } from '../../utils'
 import { deleteWork, trashWork } from '../../APIish'
 
@@ -63,6 +64,7 @@ export default class UserOverview extends Component {
         return (
             <Segment attached='bottom' >
                 <Header as="h4" >Oversikt Bruker</Header>
+                <GeneratePdf overview={this.state.overview} selectedMonth={this.state.selectedMonth} selectedYear={this.state.selectedYear} wage={100} />
                 <Form>
                     <Form.Group widths="equal">
                         <Form.Field>
