@@ -145,11 +145,9 @@ export default class Overview extends Component {
                 >
                     <Header icon="comment" content="Kommentar" />
                     <Modal.Content>
-                        <pre>
-                            <p>
-                                {this.state.selectedComment}
-                            </p>
-                        </pre>
+                        <div style={{ overflowWrap: "break-word", whiteSpace: "pre-wrap" }} >
+                            <p>{this.state.selectedComment}</p>
+                        </div>
                     </Modal.Content>
                     {/* <Modal.Actions>
                         <Button color="red" onClick={() => this.setState({ modalOpen: false })} >

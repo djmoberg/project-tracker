@@ -345,3 +345,18 @@ export function sendNewPassword(email, callback) {
             callback(res)
         })
 }
+
+//GeneratePdf.js //ikke brukt
+export function getPdf(data, callback) {
+    request
+        .get(process.env.REACT_APP_BACKEND + "pdfMake")
+        .send({
+            overview: data.overview,
+            selectedMonth: data.selectedMonth,
+            selectedYear: data.selectedYear,
+            wage: data.wage
+        })
+        .then((res) => {
+            callback(res)
+        })
+}
