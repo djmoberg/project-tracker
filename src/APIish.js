@@ -106,8 +106,7 @@ export function getPendingJoinRequests(callback) {
 
 export function deletePendingJoinRequests(projectId, callback) {
     request
-        .delete(process.env.REACT_APP_BACKEND + "user/pendingJoinRequest")
-        .send({ projectId: projectId })
+        .delete(process.env.REACT_APP_BACKEND + "user/pendingJoinRequest/" + projectId)
         .withCredentials()
         .then((res) => {
             callback(res)
@@ -155,8 +154,7 @@ export function addUser(username, callback) {
 
 export function removeUser(username, callback) {
     request
-        .delete(process.env.REACT_APP_BACKEND + "project/removeUser")
-        .send({ username: username })
+        .delete(process.env.REACT_APP_BACKEND + "project/removeUser/" + username)
         .withCredentials()
         .then((res) => {
             callback(res)
@@ -193,8 +191,7 @@ export function getJoinRequests(callback) {
 
 export function deleteJoinRequest(userId, callback) {
     request
-        .delete(process.env.REACT_APP_BACKEND + "project/joinRequests")
-        .send({ userId: userId })
+        .delete(process.env.REACT_APP_BACKEND + "project/joinRequests/" + userId)
         .withCredentials()
         .then((res) => {
             callback(res)
@@ -213,8 +210,7 @@ export function updateProject(newName, newDescription, callback) {
 
 //UserOverview.js
 export function deleteWork(id, callback) {
-    request.delete(process.env.REACT_APP_BACKEND + "work/delete")
-        .send({ id })
+    request.delete(process.env.REACT_APP_BACKEND + "work/delete/" + id)
         .withCredentials()
         .then((res) => {
             callback(res)
@@ -328,8 +324,7 @@ export function getDeletedWork(callback) {
 
 export function deleteTrash(id, callback) {
     request
-        .delete(process.env.REACT_APP_BACKEND + "work/trash")
-        .send({ id: id })
+        .delete(process.env.REACT_APP_BACKEND + "work/trash/" + id)
         .withCredentials()
         .then((res) => {
             callback(res)
